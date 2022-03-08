@@ -1,2 +1,2 @@
-# tic-tac-toe
-A tic tac toe game for CS 4B
+# DummyBean
+This is a Dummy Repository for testing git commands

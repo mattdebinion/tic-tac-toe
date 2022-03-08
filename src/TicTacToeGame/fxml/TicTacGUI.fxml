@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="startMenu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="654.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TicTacToeGame.TicTacGUIController">
+   <Label fx:id="PlayerDisplay1" layoutX="14.0" layoutY="2.0" prefHeight="39.0" prefWidth="267.0" text="Player One:" textFill="#457fd1">
+      <font>
+         <Font name="American Typewriter" size="16.0" />
+      </font>
+   </Label>
+   <Button fx:id="menuBtn2" layoutX="35.0" layoutY="607.0" onAction="#goToMainMenu" prefHeight="39.0" prefWidth="168.0" stylesheets="@../stylesheets/style.css" text="Main Menu">
+      <font>
+         <Font name="American Typewriter" size="20.0" />
+      </font>
+   </Button>
+   <Button fx:id="restartBtn2" disable="true" layoutX="241.0" layoutY="608.0" onAction="#newGame" prefHeight="25" prefWidth="100" stylesheets="@../stylesheets/style.css" text="Restart">
+      <font>
+         <Font name="American Typewriter" size="20.0" />
+      </font>
+   </Button>
+   <Button layoutX="425.0" layoutY="607.0" mnemonicParsing="false" onAction="#logout" stylesheets="@../stylesheets/style.css" text="Quit" textAlignment="CENTER">
+      <font>
+          <Font name="American Typewriter" size="20.0" />
+      </font>
+   </Button>
+   <Label layoutX="343.0" layoutY="637.0" prefHeight="17.0" prefWidth="145.0" text="" />
+    <Line endX="259.5" endY="506.0" layoutX="-54.0" layoutY="33.0" startX="259.5" startY="53.0" strokeWidth="5.0" />
+    <Line endX="471.5" endY="500.0" layoutX="-73.0" layoutY="39.0" startX="471.5" startY="42.0" strokeWidth="5.0" />
+    <Line endX="553.5" endY="227.79290771484375" layoutX="-3.0" layoutY="3.0" startX="33.5" startY="227.79290771484375" strokeMiterLimit="20.0" strokeWidth="5.0" />
+    <Line endX="538.5" endY="427.0" layoutX="9.0" layoutY="-31.0" startX="24.5" startY="427.0" strokeWidth="5.0" />
+      <GridPane fx:id="GameBoard" alignment="CENTER" layoutX="5.0" layoutY="14.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="604.0" prefWidth="591.0">
+          <Button fx:id="square11" alignment="CENTER" contentDisplay="CENTER" defaultButton="true" onAction="#checkCurrentButton" prefHeight="201.0" prefWidth="180.0" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-border-color: none;" styleClass="IDLE_BUTTON" stylesheets="@../stylesheets/style.css" text="" />
+          <Button fx:id="square12" alignment="CENTER" onAction="#checkCurrentButton" prefHeight="139.0" prefWidth="191.0" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-border-color: none;" stylesheets="@../stylesheets/style.css" text="" GridPane.columnIndex="1" />
+          <Button fx:id="square13" alignment="CENTER" onAction="#checkCurrentButton" prefHeight="196.0" prefWidth="155.0" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-border-color: none;" stylesheets="@../stylesheets/style.css" text="" GridPane.columnIndex="2" />
+          <Button fx:id="square21" alignment="CENTER" onAction="#checkCurrentButton" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-border-color: none;" stylesheets="@../stylesheets/style.css" text="" GridPane.rowIndex="1" />
+          <Button fx:id="square22" alignment="CENTER" onAction="#checkCurrentButton" prefHeight="200" prefWidth="200" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-border-color: none;" stylesheets="@../stylesheets/style.css" text="" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+          <Button fx:id="square23" alignment="CENTER" onAction="#checkCurrentButton" prefHeight="164.0" prefWidth="168.0" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-border-color: none;" stylesheets="@../stylesheets/style.css" text="" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+          <Button fx:id="square31" alignment="CENTER" onAction="#checkCurrentButton" prefHeight="121.0" prefWidth="180.0" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-border-color: none;" stylesheets="@../stylesheets/style.css" text="" GridPane.rowIndex="2" />
+          <Button fx:id="square32" alignment="CENTER" onAction="#checkCurrentButton" prefHeight="134.0" prefWidth="193.0" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-border-color: none;" stylesheets="@../stylesheets/style.css" text="" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
+          <Button fx:id="square33" alignment="CENTER" onAction="#checkCurrentButton" prefHeight="151.0" prefWidth="155.0" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-border-color: none;" stylesheets="@../stylesheets/style.css" text="" GridPane.columnIndex="2" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER" />
+      <columnConstraints>
+         <ColumnConstraints maxWidth="251.0" minWidth="119.0" prefWidth="167.0" />
+         <ColumnConstraints maxWidth="281.0" minWidth="125.0" prefWidth="187.0" />
+         <ColumnConstraints maxWidth="224.0" minWidth="112.0" prefWidth="174.0" />
+      </columnConstraints>
+      <rowConstraints>
+         <RowConstraints maxHeight="300.0" minHeight="133.0" prefHeight="145.0" />
+         <RowConstraints maxHeight="259.0" minHeight="133.0" prefHeight="164.0" />
+         <RowConstraints maxHeight="400.0" minHeight="103.0" prefHeight="146.0" />
+      </rowConstraints>
+      </GridPane>
+   <Label fx:id="gameStatus" layoutX="106.0" layoutY="561.0" prefHeight="26.0" prefWidth="426.0" text="CLICK ANY SQUARE TO START GAME">
+        <font>
+            <Font name="American Typewriter" size="21.0" />
+        </font>
+   </Label>
+   <Label fx:id="PlayerDisplay2" layoutX="381.0" layoutY="12.0" prefHeight="26.0" prefWidth="213.0" text="Player Two:" textFill="#457fd1">
+      <font>
+         <Font name="American Typewriter" size="16.0" />
+      </font>
+   </Label>
+</AnchorPane>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="startMenu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="654.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TicTacToeGame.TicTacGUIController">
+    <Label fx:id="EnterPlayOneNameLabel" layoutX="115.0" layoutY="191.0" text="ENTER PLAYER ONE:">
+        <font>
+            <Font name="American Typewriter" size="34.0" />
+        </font></Label>
+
+    <TextField fx:id="PlayerOneNameInput" layoutX="94.0" layoutY="300.0" onAction="#getPlayerOneName" prefHeight="89.0" prefWidth="398.0">
+        <font>
+            <Font name="American Typewriter" size="32.0" />
+        </font></TextField>
+
+    <Button fx:id="submitButton" layoutX="207.0" layoutY="452.0" mnemonicParsing="false" onAction="#getPlayerOneName" prefHeight="64.0" prefWidth="186.0" stylesheets="@../stylesheets/style.css" text="SUBMIT">
+        <font>
+            <Font name="American Typewriter" size="34.0" />
+        </font></Button>
+</AnchorPane>
