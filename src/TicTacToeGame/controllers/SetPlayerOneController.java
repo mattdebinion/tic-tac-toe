@@ -17,7 +17,12 @@ public class SetPlayerOneController {
     @FXML public void getPlayerOneName(ActionEvent event) throws IOException {
         Client.setName(PlayerOneNameInput.getText());
 
-        Parent root = FXMLLoader.load(getClass().getResource("../fxml/TicTacGUI.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/TicTacGUI.fxml"));
+        Parent root = loader.load();
+        
+        System.out.println("Attempting connection...");
+        Client.connect(loader.getController());
+
         Stage window = (Stage) PlayerOneNameInput.getScene().getWindow();
         window.setScene(new Scene(root));
     }

@@ -1,9 +1,15 @@
 package TicTacToeGame;
-
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+
+/**
+ * A PlayerObject class is a serializable object that contains the information about a player that is connected to the server.
+ * Once a PlayerObject is created, it cannot be modified.
+ * 
+ * @author Matt De Binion
+ */
 public class PlayerObject implements Serializable {
     
     // PLAYER INFORMATION \\
