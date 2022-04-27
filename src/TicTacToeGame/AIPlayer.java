@@ -16,7 +16,7 @@ public class AIPlayer extends Player {
 
     private int difficulty = 0;     // 0 = easy, 1 = medium, 2 = hard.
     private boolean thinking = false;
-    private TicTacToeBoard GameLogic = TicTacToeBoard.getInstance();
+    private Logic GameLogic = Logic.getInstance();
     private Thread brain;
 
     public AIPlayer() throws GameNotStartedException {
@@ -60,19 +60,22 @@ public class AIPlayer extends Player {
                 while(!brain.isInterrupted()) {
                     try {
                         Thread.sleep(250);  // Speed control the thread as going too fast breaks the game.
-                        if(GameLogic.getCurrentPlayer().isAI() && !GameLogic.gameHasEnded()) {
-                            Platform.runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        performMyNextMove();
-                                    } catch (GameNotStartedException e) {
-                                        e.printStackTrace();
+                        if(GameLogic.gameIsRunning()) {
+                            if(GameLogic.getCurrentPlayer().isAI() && !GameLogic.gameHasEnded()) {
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            performMyNextMove();
+                                        } catch (GameNotStartedException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
-                                }
 
-                            });
+                                });
+                            }
                         }
+
                             
                     } catch (InterruptedException e) {
                         brain.interrupt();

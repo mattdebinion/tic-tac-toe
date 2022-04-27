@@ -28,8 +28,6 @@ public class run extends Application {
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("stylesheets/style.css").toExternalForm());
 
-
-
         stage.setTitle("Tic Tac Toe");
         stage.setScene(scene);
         stage.show();
