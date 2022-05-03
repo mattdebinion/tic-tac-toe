@@ -32,7 +32,6 @@ public class TicTacBoardController {
 
         System.out.println("Connecting...");
         associatedClient = new Client(this, new PlayerObject("ME", 'M', true));
-        PlayerObject player1 = associatedClient.getPlayer1();
         
         PlayerDisplay1.setText("Player 1: ...");
         PlayerDisplay2.setText("Player 2: ...");
@@ -63,6 +62,7 @@ public class TicTacBoardController {
         yCoord = (buttonID - 11) % 10;
 
         associatedClient.sendMove(xCoord, yCoord);
+        updateStatusLabel("Waiting for opponent to move...");
     }
 
     /**
@@ -137,13 +137,13 @@ public class TicTacBoardController {
 
     public void SetPlayer1(PlayerObject player) {
         Platform.runLater(() -> {
-            PlayerDisplay2.setText("Player 1: " + player.getName());
+            PlayerDisplay1.setText("Player 1: " + player.getName());
         });
     }
 
     public void SetPlayer2(PlayerObject player) {
         Platform.runLater(() -> {
-            PlayerDisplay1.setText("Player 2: " + player.getName());
+            PlayerDisplay2.setText("Player 2: " + player.getName());
         });
     }
 }

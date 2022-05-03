@@ -58,6 +58,10 @@ public class PlayerObject implements Serializable {
         playerID = id;
     }
 
+    public int getID() {
+        return playerID;
+    }
+
     /**
      * Retrieve the flag to determine if the player is an AI.
      * @return True if the player is an AI, false if the player is human.

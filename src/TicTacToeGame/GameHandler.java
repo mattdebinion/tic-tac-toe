@@ -10,7 +10,6 @@ import java.net.Socket;
  */
 public class GameHandler implements Runnable {
 
-    private int[][] boardState = new int[3][3];
     private Socket player1;
     private Socket player2;
 
@@ -18,8 +17,6 @@ public class GameHandler implements Runnable {
     private ObjectOutputStream toPlayer1;
     private ObjectInputStream fromPlayer2;
     private ObjectOutputStream toPlayer2;
-
-    private boolean running = true;
 
     public GameHandler(Socket player1, ObjectOutputStream toPlayer1, Socket player2, ObjectOutputStream toPlayer2) throws IOException {
 
@@ -54,7 +51,11 @@ public class GameHandler implements Runnable {
                     System.out.println("Received data from player2, sending it to player 1...");
                     sendSessionData(toPlayer1, dataToReceive2);
                 }
-                // Do stuff!
+                
+                // GAME LOGIC IMPLEMENTATION HERE.
+                // Ideas: Depending who the sending player, verify if their move is correct.
+                // If their move is correct, send it to the other player. If not, do not send it and give the sender an error!
+                // Client should read the SessionData object to display if there was a winner or a draw.
             }
 
         } catch (Exception e) {

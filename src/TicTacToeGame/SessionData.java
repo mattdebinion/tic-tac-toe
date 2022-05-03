@@ -95,5 +95,31 @@ public class SessionData implements Serializable {
     public PlayerObject getSender() {
         return sender;
     }
+    /**
+     * Outputs to terminal what is inside this session data object.
+     */
+    public void debugSessionData() {
+        System.out.println("\n========== SESSION DATA OBJECT INFORMATION ==========");
+        if(getPlayer1() == null) {
+            System.out.print("Player 1: NULL");
+        } else {
+            System.out.print("Player 1: " + getPlayer1().getName());
+        }
+        System.out.print(" vs ");
+        if(getPlayer2() == null) {
+            System.out.println("Player 2: NULL");
+        } else {
+            System.out.println("Player 2: " + getPlayer2().getName());
+        }
+
+        if(getSender() == null) {
+            System.out.println("Sender: NULL");
+        } else {
+            System.out.println("Sender: " + getSender().getName());
+        }
+        System.out.println("Associated coordinates: " + getXPos() + ", " + getYPos());
+        System.out.println("Game running status: " + isRunning());
+        System.out.println("=====================================================\n");
+    }
 
 }

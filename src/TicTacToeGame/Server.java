@@ -1,12 +1,12 @@
 package TicTacToeGame;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+// import java.io.BufferedReader;
+// import java.io.InputStreamReader;
+// import java.net.URL;
 import java.io.ObjectOutputStream;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -30,7 +30,7 @@ public class Server {
             // URL url = new URL("https://checkip.amazonaws.com/");
 
             // BufferedReader sc = new BufferedReader(new InputStreamReader(url.openStream()));
-            // systemIPAddress = sc.readLine().trim();
+            // String systemIPAddress = sc.readLine().trim();
 
             // Start the server on unassigned port 60.
             ServerSocket serverSocket = new ServerSocket(60);
