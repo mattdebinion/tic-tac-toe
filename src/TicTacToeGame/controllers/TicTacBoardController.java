@@ -1,6 +1,7 @@
 package TicTacToeGame.controllers;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 
 import TicTacToeGame.Client;
 import TicTacToeGame.PlayerObject;
@@ -23,11 +24,20 @@ public class TicTacBoardController {
     @FXML Label PlayerDisplay1, PlayerDisplay2, gameStatus;
     @FXML Button menuBtn2, restartBtn2, quitGame, square11, square12, square13, square21, square22, square23, square31, square32, square33;
     @FXML GridPane GameBoard;
+    
+    static Client associatedClient;
 
     @FXML
-    public void initialize() {
-        PlayerDisplay1.setText("Player 1: " + Client.getMe().getName());
+    public void initialize() throws UnknownHostException {
+
+        System.out.println("Connecting...");
+        associatedClient = new Client(this, new PlayerObject("ME", 'M', true));
+        PlayerObject player1 = associatedClient.getPlayer1();
+        
+        PlayerDisplay1.setText("Player 1: ...");
         PlayerDisplay2.setText("Player 2: ...");
+        changeBoardLock(true);
+        updateStatusLabel("Waiting for player 2...");
     }
 
     /**
@@ -39,6 +49,10 @@ public class TicTacBoardController {
     @FXML public void checkCurrentButton(ActionEvent event) throws IOException, InvalidMoveException {
         
         Button squareButton = (Button) event.getSource();
+
+        if(squareButton.isDisabled())
+            return;
+            
         int xCoord = 0, yCoord = 0;
 
         String btn = squareButton.getId(); // Get current button ID and chop off the number portion of the ID. This always assume the button ID format has two numbers at the end of the string.
@@ -48,8 +62,7 @@ public class TicTacBoardController {
         xCoord = (int) Math.floor(buttonID / 10) - 1;
         yCoord = (buttonID - 11) % 10;
 
-        System.out.println("Sending move at " + xCoord + ", " + yCoord);
-        Client.sendMove(xCoord, yCoord);
+        associatedClient.sendMove(xCoord, yCoord);
     }
 
     /**
@@ -97,9 +110,40 @@ public class TicTacBoardController {
         });
     }
 
-    public void setOpponent(PlayerObject opponent) {
+    public void updateStatusLabel(String message) {
         Platform.runLater(() -> {
-            PlayerDisplay2.setText("Player 2: " + opponent.getName());
+            gameStatus.setText(message);
+        });
+
+    }
+
+    /**
+     * Updates the board lock, unlocks squares that are empty.
+     * @param state
+     */
+    public void changeBoardLock(boolean state) {
+        Platform.runLater(() -> {
+            square11.setDisable(square11.getText().length() >= 1 ? true : state);
+            square12.setDisable(square12.getText().length() >= 1 ? true : state);
+            square13.setDisable(square13.getText().length() >= 1 ? true : state);
+            square21.setDisable(square21.getText().length() >= 1 ? true : state);
+            square22.setDisable(square22.getText().length() >= 1 ? true : state);
+            square23.setDisable(square23.getText().length() >= 1 ? true : state);
+            square31.setDisable(square31.getText().length() >= 1 ? true : state);
+            square32.setDisable(square32.getText().length() >= 1 ? true : state);
+            square33.setDisable(square33.getText().length() >= 1 ? true : state);
+        });
+    }
+
+    public void SetPlayer1(PlayerObject player) {
+        Platform.runLater(() -> {
+            PlayerDisplay2.setText("Player 1: " + player.getName());
+        });
+    }
+
+    public void SetPlayer2(PlayerObject player) {
+        Platform.runLater(() -> {
+            PlayerDisplay1.setText("Player 2: " + player.getName());
         });
     }
 }

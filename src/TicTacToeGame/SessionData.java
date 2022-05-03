@@ -1,9 +1,6 @@
 package TicTacToeGame;
-
 import java.io.Serializable;
 
-import TicTacToeGame.exceptions.InvalidMoveException;
-import javafx.util.Pair;
 
 /**
  * A SessionData object contains information about a game session. It contains the sender, the session ID,
@@ -13,107 +10,90 @@ import javafx.util.Pair;
  */
 public class SessionData implements Serializable {
 
-    private PlayerObject sender;            // Sender of the SessionData
-    private PlayerObject receiver = null;   // The receiver for the object.
-    private PlayerObject winner = null;     // The winner associated in the game.
-    private boolean gameRunning = false;    // Flag to determine if the game is running.
-    private boolean verified = false;       // Flag sent that will be set to true when the GameHandler has verified the session data.
-    private int sessionID;                  // ID of the current session
+    private PlayerObject player1;            // Sender of the SessionData
+    private PlayerObject player2;           // The receiver for the object.
+    private PlayerObject winner;            // A winner of the game (if applicable).
+    private PlayerObject sender;            // The sender of this SessionData.
+    private boolean gameRunning = false;
+
     private int xPos;                       // X position of the move
     private int yPos;                       // Y position of the move
 
-    /**
-     * Creates a SessionData object that can be passed through the socket. This is read by the Game Handler.
-     * @param sender [PlayerObject] The player object that sent the data.
-     * @param receiver [PlayerObject] The player object that will be receiving this data.
-     * @param sessionID [int] The session ID of the game.
-     * @param xPos [int] The x position of the move.
-     * @param yPos [int] The y position of the move.
-     * @throws InvalidMoveException Occurs when an invalid move is passed in (aka a move that is not between 0 and 2).
-     */
-    public SessionData(PlayerObject sender, int sessionID, int xPos, int yPos) throws InvalidMoveException {
-        this.sender = sender;
-        this.sessionID = sessionID;
+    private int[][] senderBoardState;      // The board state of the sender.
+
+    // Creates a new, empty SessionData object.
+    public SessionData() {}
+
+    public SessionData(PlayerObject player1, PlayerObject player2, int xPos, int yPos, boolean running) {
+        this.player1 = player1;
+        this.player2 = player2;
         this.xPos = xPos;
         this.yPos = yPos;
+        this.gameRunning = running;
     }
 
-    /**
-     * Returns the PlayerObject that sent the data.
-     * @return [PlayerObject] The player object that sent the data.
-     */
-    public PlayerObject getSender() {
-        return sender;
+    public PlayerObject getPlayer1() {
+        return player1;
     }
 
-    /**
-     * Returns the PlayerObject that will receive the data.
-     * @return [PlayerObject] The player object that will receive the data.
-     */
-    public PlayerObject getReceiver() {
-        return receiver;
+    public PlayerObject getPlayer2() {
+        return player2;
     }
 
-    /**
-     * Sets the receiver for this sessionData.
-     * @param receiver
-     */
-    public void setReceiver(PlayerObject receiver) {
-        this.receiver = receiver;
-    }
-
-    /**
-     * Returns the session ID associated with the session.
-     * @return [int] The session ID.
-     */
-    public int sessionID() {
-        return sessionID;
-    }
-
-    /**
-     * Returns a pair of coordinates that represent the location of the move.
-     * @return [Pair<Integer, Integer>] The x and y coordinates of the move.
-     */
-    public Pair<Integer, Integer> getMovePair() {
-        return new Pair<>(xPos, yPos);
-    }
-
-    /**
-     * The GameHandler will call this method if it determines that the given move is valid.
-     */
-    protected void verifySessionData() {
-        verified = true;
-    }
-
-    /**
-     * Checks to see if this SessionData has been verified by the Game Handler.
-     * @return [boolean] True if verified, false otherwise.
-     */
-    public boolean checkVerification() {
-        return verified;
-    }
-
-    /**
-     * Gets a current winner of the game.
-     * @return [PlayerObject] The winner of the game. Will be NULL if there is currently no winner.
-     */
     public PlayerObject getWinner() {
         return winner;
     }
-    
-    /**
-     * Determines if game is running in this session.
-     * @return [boolean] True if game is running, false otherwise.
-     */
+
+    public int getXPos() {
+        return xPos;
+    }
+
+    public void setXPos(int x) {
+        xPos = x;
+    }
+
+    public int getYPos() {
+        return yPos;
+    }
+
+    public void setYPos(int y) {
+        yPos = y;
+    }
+
+    public int[][] getSenderBoardState() {
+        return senderBoardState;
+    }
+
+    public void setBoardState(int[][] board) {
+        senderBoardState = board;
+    }
+
+    public void setPlayer1(PlayerObject player1) {
+        this.player1 = player1;
+    }
+
+    public void setPlayer2(PlayerObject player2) {
+        this.player2 = player2;
+    }
+
+    public void setWinner(PlayerObject winner) {
+        this.winner = winner;
+    }
+
     public boolean isRunning() {
         return gameRunning;
     }
 
-    /**
-     * Sets the game to running.
-     */
-    public void setRunning() {
+    public void startGame() {
         gameRunning = true;
+    }
+
+    public void setSender(PlayerObject sender) {
+        this.sender = sender;
+    }
+
+    public PlayerObject getSender() {
+        return sender;
     }
 
 }

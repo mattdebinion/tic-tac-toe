@@ -4,50 +4,70 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
-
-import TicTacToeGame.controllers.TicTacBoardController;
 
 /**
- * The game logic.
+ * The GameHandler class (an observable) handles the sessions and game logic that is sent through the server.
  */
-public class GameHandler {
+public class GameHandler implements Runnable {
 
-    private static SessionData latestData;
-    private static TicTacBoardController controller;
+    private int[][] boardState = new int[3][3];
+    private Socket player1;
+    private Socket player2;
 
-    /**
-     * Listen for moves (SessionData objects) from the server.
-     * @throws IOException
-     * @throws UnknownHostException
-     */
-    public static void listenForData() throws UnknownHostException, IOException {
+    private ObjectInputStream fromPlayer1;
+    private ObjectOutputStream toPlayer1;
+    private ObjectInputStream fromPlayer2;
+    private ObjectOutputStream toPlayer2;
 
-        Socket socket = new Socket("localhost", 60);
-        ObjectOutputStream objOut = new ObjectOutputStream(socket.getOutputStream());
-        objOut.flush();
-        ObjectInputStream objIn = new ObjectInputStream(socket.getInputStream());
+    private boolean running = true;
 
-        new Thread(() -> {
-            while(socket.isConnected()) {
-                try {
-                    SessionData dataReceived = (SessionData) objIn.readObject();
+    public GameHandler(Socket player1, ObjectOutputStream toPlayer1, Socket player2, ObjectOutputStream toPlayer2) throws IOException {
 
-                    if(dataReceived instanceof SessionData) {
+        this.player1 = player1;
+        this.toPlayer1 = toPlayer1;
 
-                        if(!dataReceived.checkVerification()) {
-                            System.out.println("Unverified data received! Verifying and emitting again.");
-                        } 
-
-                        controller.updateBoardAt(dataReceived.getMovePair().getKey(), dataReceived.getMovePair().getValue(), dataReceived.getSender());
-                    }
-
-                } catch (Exception e) {
-                    System.out.println("Error occured trying to listen for data within GameHandler!");
-                    e.printStackTrace();
-                }
-            }
-            
-        }).start();
+        this.player2 = player2;
+        this.toPlayer2 = toPlayer2;
     }
+
+    @Override
+    public void run() {
+
+        try {
+            fromPlayer1 = new ObjectInputStream(player1.getInputStream());
+            fromPlayer2 = new ObjectInputStream(player2.getInputStream());
+
+            toPlayer1.writeObject(new SessionData());   // Write something to player 1 to notify them that there are now two players.
+
+            while(true) {
+
+                SessionData dataToReceive = (SessionData) fromPlayer1.readObject();
+
+                if(dataToReceive instanceof SessionData) {
+                    System.out.println("Received data from player1, sending it to player 2...");
+                    sendSessionData(toPlayer2, dataToReceive);
+                }
+
+                SessionData dataToReceive2 = (SessionData) fromPlayer2.readObject();
+
+                if(dataToReceive2 instanceof SessionData) {
+                    System.out.println("Received data from player2, sending it to player 1...");
+                    sendSessionData(toPlayer1, dataToReceive2);
+                }
+                // Do stuff!
+            }
+
+        } catch (Exception e) {
+            System.out.println("An error occured within the GameHandler!");
+            e.printStackTrace();
+        }
+        
+    }
+
+    private void sendSessionData(ObjectOutputStream destination, SessionData dataToSend) throws IOException {
+        destination.writeObject(dataToSend);
+        destination.flush();
+    }
+
+    
 }
