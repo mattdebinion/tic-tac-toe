@@ -137,13 +137,19 @@ public class TicTacBoardController {
 
     public void SetPlayer1(PlayerObject player) {
         Platform.runLater(() -> {
-            PlayerDisplay1.setText("Player 1: " + player.getName());
+
+            if(player != null)
+                PlayerDisplay1.setText("Player 1: " + player.getName());
+
         });
     }
 
     public void SetPlayer2(PlayerObject player) {
         Platform.runLater(() -> {
-            PlayerDisplay2.setText("Player 2: " + player.getName());
+
+            if(player != null)
+                PlayerDisplay2.setText("Player 2: " + player.getName());
+                
         });
     }
 }

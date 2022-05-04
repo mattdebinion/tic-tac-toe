@@ -11,10 +11,11 @@ import java.io.Serializable;
 public class SessionData implements Serializable {
 
     private PlayerObject player1;            // Sender of the SessionData
-    private PlayerObject player2;           // The receiver for the object.
-    private PlayerObject winner;            // A winner of the game (if applicable).
-    private PlayerObject sender;            // The sender of this SessionData.
-    private boolean gameRunning = false;
+    private PlayerObject player2;            // The receiver for the object.
+    private PlayerObject winner;             // A winner of the game (if applicable).
+    private PlayerObject sender;             // The sender of this SessionData.
+    private boolean stalemate = false;       // Whether or not the game is a stalemate.
+    private boolean gameRunning = false;     // Whether or not the game is running.
 
     private int xPos;                       // X position of the move
     private int yPos;                       // Y position of the move
@@ -95,6 +96,15 @@ public class SessionData implements Serializable {
     public PlayerObject getSender() {
         return sender;
     }
+
+    public void setStalemate() {
+        stalemate = true;
+    }
+
+    public boolean seeIfStalemate() {
+        return stalemate;
+    }
+    
     /**
      * Outputs to terminal what is inside this session data object.
      */
@@ -117,8 +127,28 @@ public class SessionData implements Serializable {
         } else {
             System.out.println("Sender: " + getSender().getName());
         }
-        System.out.println("Associated coordinates: " + getXPos() + ", " + getYPos());
         System.out.println("Game running status: " + isRunning());
+        System.out.println("Stalemate status: " + seeIfStalemate());
+        System.out.println("Associated coordinates: " + getXPos() + ", " + getYPos());
+
+        System.out.println("BOARD STATE:");
+
+        if(senderBoardState == null) {
+            System.out.println("Waiting for game start...");
+        } else {
+            for(int i = 0; i < 3; i++) {
+                for(int j = 0; j < 3; j++) {
+                    System.out.print(senderBoardState[i][j] + " ");
+                }
+                System.out.println();
+            }
+        }
+
+        if(getWinner() == null) {
+            System.out.println("Winner: none");
+        } else {
+            System.out.println("Winner: " + getWinner().getName());
+        }
         System.out.println("=====================================================\n");
     }
 
