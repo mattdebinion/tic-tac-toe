@@ -1,9 +1,9 @@
 package TicTacToeGame.exceptions;
 
 /**
- * The GameNotStartedException occurs when the TicTacToe board flag is not set to TRUE.
+ * The GameNotStartedException occurs when there is no connected PlayerObject within a game.
  * 
- * To resolve this, run the startGame method
+ * To resolve this, ensure you are connected to a game.
  */
 public class GameNotStartedException extends Exception {
     
