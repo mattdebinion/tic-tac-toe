@@ -64,8 +64,8 @@ public class Client extends Application {
     /**
      * Connects to the server assuming the server is online.
      * <p>It's best to call this function before the Tic Tac Toe board is loaded.
-     * @param boardController
-     * @param me 
+     * @param gameController
+     * @param clientInfo
      */
     public Client(TicTacBoardController gameController, PlayerObject clientInfo) {
 
@@ -223,8 +223,8 @@ public class Client extends Application {
 
     /**
      * Update player names within the UI and the client.
-     * @param me
-     * @param opponent
+     * @param player1
+     * @param player2
      */
     private void updatePlayers(PlayerObject player1, PlayerObject player2) {
 
