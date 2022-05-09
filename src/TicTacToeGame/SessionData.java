@@ -21,6 +21,7 @@ public class SessionData implements Serializable {
     private int yPos;                       // Y position of the move
 
     private int[][] senderBoardState;      // The board state of the sender.
+    private int[][] gameBoard;              // the state of the board
 
     // Creates a new, empty SessionData object.
     public SessionData() {}

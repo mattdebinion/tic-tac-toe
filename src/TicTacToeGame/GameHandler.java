@@ -135,6 +135,136 @@ public class GameHandler implements Runnable {
             dataToReturn.setWinner(player);
             return dataToReturn;
         }
+    }
+    ////// Print Board
+        for(int i = 0; i < 3; i++) {
+        for(int j = 0; j < 3; j++) {
+            System.out.print(GameBoard[i][j] + " ");
+        }
+        System.out.println();
+    }
+    // If a session data object is passed with -1 X and Y positions.
+        if(dataToReturn.getXPos() == -1 && dataToReturn.getYPos() == -1) {
+        return dataToReturn;
+    }
+
+    // check player 1 Wins
+    // horizontal Row 0 player 1 check
+        if (GameBoard[0][0] == 1 && GameBoard[0][1] == 1 && GameBoard[0][2] == 1){
+        System.out.println("Test: HORIZINTAL ROW 0 PLAYER 1 WIN");
+        dataToReturn.setWinner(player);
+        return dataToReturn;
+    }
+
+    // horizontal row 1
+        if (GameBoard[1][0] == 1 && GameBoard[1][1] == 1 && GameBoard[1][2] == 1) {
+        System.out.println("Test: horizontal ROW 1 PLAYER 1 WIN");
+        dataToReturn.setWinner(player);
+        return dataToReturn;
+    }
+    // horizontal row 2
+        if (GameBoard[2][0] == 1 && GameBoard[2][1] == 1 && GameBoard[2][2] == 1) {
+        System.out.println("Test: HORIZINTAL ROW 2 PLAYER 1 WIN");
+        dataToReturn.setWinner(player);
+        return dataToReturn;
+    }
+
+
+    ///////
+    // vertical column 0 player 1
+        if (GameBoard[0][0] == 1 && GameBoard[1][0] == 1 && GameBoard[2][0] == 1){
+        System.out.println("Test: Vertical Column 0 PLAYER 1 WIN");
+        dataToReturn.setWinner(player);
+        return dataToReturn;
+    }
+
+    // vertical column 1 player 1
+        if (GameBoard[0][1] == 1 && GameBoard[1][1] == 1 && GameBoard[2][1] == 1){
+        System.out.println("Test: Vertical Column 1 PLAYER 1 WIN");
+        dataToReturn.setWinner(player);
+        return dataToReturn;
+    }
+
+    // vertical column 2 player 1
+        if (GameBoard[0][2] == 1 && GameBoard[1][2] == 1 && GameBoard[2][2] == 1){
+        System.out.println("Test: Vertical Column 2 PLAYER 1 WIN");
+        dataToReturn.setWinner(player);
+        return dataToReturn;
+    }
+    ////////
+    // Diagonal Left to Right player 1
+        if (GameBoard[0][0] == 1 && GameBoard[1][1] == 1 && GameBoard[2][2] == 1){
+        System.out.println("Test: Diagonal 1 PLAYER 1 WIN");
+        dataToReturn.setWinner(player);
+        return dataToReturn;
+    }
+
+    // Diagonal Left to Right player 1
+        if (GameBoard[2][0] == 1 && GameBoard[1][1] == 1 && GameBoard[0][2] == 1){
+        System.out.println("Test: Diagonal 2 PLAYER 1 WIN");
+        dataToReturn.setWinner(player);
+        return dataToReturn;
+    }
+
+    //// PLAYER 2 WIN CHECK
+
+    // check player 2 Wins
+    // horizontal Row 0 player 1 check
+        if (GameBoard[0][0] == 2 && GameBoard[0][1] == 2 && GameBoard[0][2] == 2){
+        System.out.println("Test: HORIZINTAL ROW 0 PLAYER 1 WIN");
+        dataToReturn.setWinner(player);
+        return dataToReturn;
+    }
+
+    // horizontal row 1
+        if (GameBoard[1][0] == 2 && GameBoard[1][1] == 2 && GameBoard[1][2] == 2) {
+        System.out.println("Test: horizontal ROW 1 PLAYER 1 WIN");
+        dataToReturn.setWinner(player);
+        return dataToReturn;
+    }
+    // horizontal row 2
+        if (GameBoard[2][0] == 2 && GameBoard[2][1] == 2 && GameBoard[2][2] == 2) {
+        System.out.println("Test: HORIZINTAL ROW 2 PLAYER 1 WIN");
+        dataToReturn.setWinner(player);
+        return dataToReturn;
+    }
+
+
+    ///////
+    // vertical column 0 player 1
+        if (GameBoard[0][0] == 2 && GameBoard[1][0] == 2 && GameBoard[2][0] == 2){
+        System.out.println("Test: Vertical Column 0 PLAYER 1 WIN");
+        dataToReturn.setWinner(player);
+        return dataToReturn;
+    }
+
+    // vertical column 1 player 1
+        if (GameBoard[0][1] == 2 && GameBoard[1][1] == 2 && GameBoard[2][1] == 2){
+        System.out.println("Test: Vertical Column 1 PLAYER 1 WIN");
+        dataToReturn.setWinner(player);
+        return dataToReturn;
+    }
+
+    // vertical column 2 player 1
+        if (GameBoard[0][2] == 2 && GameBoard[1][2] == 2 && GameBoard[2][2] == 2){
+        System.out.println("Test: Vertical Column 2 PLAYER 1 WIN");
+        dataToReturn.setWinner(player);
+        return dataToReturn;
+    }
+    ////////
+    // Diagonal Left to Right player 1
+        if (GameBoard[0][0] == 2 && GameBoard[1][1] == 2 && GameBoard[2][2] == 2){
+        System.out.println("Test: Diagonal 1 PLAYER 1 WIN");
+        dataToReturn.setWinner(player);
+        return dataToReturn;
+    }
+
+    // Diagonal Left to Right player 1
+        if (GameBoard[2][0] == 2 && GameBoard[1][1] == 2 && GameBoard[0][2] == 2){
+        System.out.println("Test: Diagonal 2 PLAYER 1 WIN");
+        dataToReturn.setWinner(player);
+        return dataToReturn;
+    }
 
         // Check if the entire board is filled. If so, return a stalemate.
         for(int row = 0; row < 3; row++) {
