@@ -19,6 +19,7 @@ public class GameHandler implements Runnable {
     private ObjectOutputStream toPlayer2;
 
     private int[][] board;
+    GameBoard gameBoard;
 
     /**
      * Creates a new game handler with two player sockets and their output streams.
