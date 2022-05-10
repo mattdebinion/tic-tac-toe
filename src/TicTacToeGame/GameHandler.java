@@ -47,6 +47,7 @@ public class GameHandler implements Runnable {
 
             toPlayer1.writeObject(new SessionData());   // Write something to player 1 to notify them that there are now two players.
 
+            // Infinitely loop here, reading SessionData objects from both players and passing them to the other player.
             while(true) {
 
                 SessionData dataToReceive = (SessionData) fromPlayer1.readObject();
@@ -57,8 +58,10 @@ public class GameHandler implements Runnable {
                     if(dataToReceive.isRunning()) {
                         dataToReceive = verifyMove(dataToReceive);
                         sendSessionData(toPlayer2, dataToReceive);
+                    } else {
+                        sendSessionData(toPlayer2, dataToReceive);
                     }
-                    sendSessionData(toPlayer2, dataToReceive);
+                    dataToReceive.debugSessionData();
                 }
 
                 SessionData dataToReceive2 = (SessionData) fromPlayer2.readObject();
@@ -73,6 +76,7 @@ public class GameHandler implements Runnable {
                         sendSessionData(toPlayer1, dataToReceive2);
                     }
                     
+                    dataToReceive2.debugSessionData();
                 }
 
             }
@@ -103,13 +107,22 @@ public class GameHandler implements Runnable {
     private SessionData verifyMove(SessionData dataToVerify) {
 
         SessionData dataToReturn = dataToVerify;            // Assign returning object to the object in parameter.
-        board = dataToVerify.getSenderBoardState();         // Assign locally
         PlayerObject player = dataToVerify.getSender();     // Get player to check.
 
         // If a session data object is passed with -1 X and Y positions.
         if(dataToReturn.getXPos() == -1 && dataToReturn.getYPos() == -1) {
             return dataToReturn;
         }
+
+        board = new int[3][3];
+        int [][] tempBoard = dataToVerify.getSenderBoardState();
+
+        for(int m = 0; m < 3; m++) {
+            for(int a = 0; a < 3; a++) {
+                board[m][a] = tempBoard[m][a];
+            }
+        }
+
         // Check for a vertical win (if X1, X2, X3 are the same)
         for(int col = 0; col < 3; col++) {
             if(board[0][col] == player.getID() && board[1][col] == player.getID() && board[2][col] == player.getID()) {

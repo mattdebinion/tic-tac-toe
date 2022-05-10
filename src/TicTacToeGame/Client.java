@@ -122,14 +122,14 @@ public class Client extends Application {
         dataToSend.setSender(me);
         dataToSend.setBoardState(board);
 
+        // System.out.println("SENDING THIS BOARD: ");
+        // outputBoard();
+
         objOut.writeObject(dataToSend);
         objOut.flush();
 
         controller.changeBoardLock(true);
         controller.updateBoardAt(row, col, me);
-
-        System.out.println("SENDING OUT:");
-        dataToSend.debugSessionData();
     }
 
 
@@ -176,9 +176,6 @@ public class Client extends Application {
                     if(dataReceived instanceof SessionData) {
                         SessionData decodedData = (SessionData) dataReceived;
                         SessionData newData = decodedData;
-
-                        System.out.println("RECEIVED:");
-                        decodedData.debugSessionData();
 
                         // The initial sent message will be a null SessionData object This lets the client know to send about me to other client.
                         if(!decodedData.isRunning()) {

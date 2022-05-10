@@ -20,7 +20,7 @@ public class SessionData implements Serializable {
     private int xPos;                       // X position of the move
     private int yPos;                       // Y position of the move
 
-    private int[][] senderBoardState;      // The board state of the sender.
+    private int[][] senderBoardState = new int[3][3];      // The board state of the sender.
 
     // Creates a new, empty SessionData object.
     public SessionData() {}
@@ -66,7 +66,12 @@ public class SessionData implements Serializable {
     }
 
     public void setBoardState(int[][] board) {
-        senderBoardState = board;
+        
+        for(int r = 0; r < 3; r++) {
+            for(int c = 0; c < 3; c++) {
+                senderBoardState[r][c] = board[r][c];
+            }
+        }
     }
 
     public void setPlayer1(PlayerObject player1) {
