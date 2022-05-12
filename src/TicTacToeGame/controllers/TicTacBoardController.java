@@ -1,7 +1,9 @@
 package TicTacToeGame.controllers;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.net.UnknownHostException;
 
 import TicTacToeGame.Client;
 import TicTacToeGame.PlayerObject;
@@ -28,15 +30,33 @@ public class TicTacBoardController {
     static Client associatedClient;
 
     @FXML
-    public void initialize() throws UnknownHostException {
+    public void initialize() throws IOException {
 
-        System.out.println("Connecting...");
-        associatedClient = new Client(this, new PlayerObject("ME", 'M', true));
-        
-        PlayerDisplay1.setText("Player 1: ...");
-        PlayerDisplay2.setText("Player 2: ...");
-        changeBoardLock(true);
-        updateStatusLabel("Waiting for player 2...");
+        BufferedReader br = new BufferedReader(new FileReader("./src/TicTacToeGame/PLAYERDATA.txt"));
+            try {
+                StringBuilder sb = new StringBuilder();
+                String line = br.readLine();
+
+                while (line != null) {
+                    sb.append(line);
+                    line = br.readLine();
+                }
+                String name = sb.toString();
+
+                System.out.println("Connecting to server as " + name);
+                associatedClient = new Client(this, new PlayerObject(name, true));
+                
+                PlayerDisplay1.setText("Player 1: ...");
+                PlayerDisplay2.setText("Player 2: ...");
+                changeBoardLock(true);
+                updateStatusLabel("Waiting for player 2...");
+
+            } finally {
+                br.close();
+
+                File file = new File("./src/TicTacToeGame/PLAYERDATA.txt");
+                file.delete();
+            }
     }
 
     /**
@@ -62,7 +82,8 @@ public class TicTacBoardController {
         yCoord = (buttonID - 11) % 10;
 
         associatedClient.sendMove(xCoord, yCoord);
-        updateStatusLabel("Waiting for opponent to move...");
+        updateBoardAt(xCoord, yCoord, associatedClient.getMe());
+        //updateStatusLabel("Waiting for opponent to move...");
     }
 
     /**
@@ -99,6 +120,9 @@ public class TicTacBoardController {
      */
     public void updateBoardAt(int x, int y, PlayerObject player) {
 
+        if(x < 0 || y < 0 || x > 2 || y > 2)
+            return;
+        
         Platform.runLater(() -> {
             Font f = Font.font("Bookman Old Style", FontWeight.EXTRA_BOLD, 64);
             String btn = "square" + (x + 1) + (y + 1);
@@ -139,7 +163,7 @@ public class TicTacBoardController {
         Platform.runLater(() -> {
 
             if(player != null)
-                PlayerDisplay1.setText("Player 1: " + player.getName());
+                PlayerDisplay1.setText("Player 1: " + player.getName() + " (" + player.getPawn() + ")");
 
         });
     }
@@ -148,7 +172,7 @@ public class TicTacBoardController {
         Platform.runLater(() -> {
 
             if(player != null)
-                PlayerDisplay2.setText("Player 2: " + player.getName());
+                PlayerDisplay2.setText("Player 2: " + player.getName() + " (" + player.getPawn() + ")");
                 
         });
     }

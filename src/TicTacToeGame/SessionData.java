@@ -10,104 +10,175 @@ import java.io.Serializable;
  */
 public class SessionData implements Serializable {
 
-    private PlayerObject player1;            // Sender of the SessionData
-    private PlayerObject player2;            // The receiver for the object.
-    private PlayerObject winner;             // A winner of the game (if applicable).
-    private PlayerObject sender;             // The sender of this SessionData.
-    private boolean stalemate = false;       // Whether or not the game is a stalemate.
-    private boolean gameRunning = false;     // Whether or not the game is running.
+    private static final long serialVersionUID = 1L;
 
+    private PlayerObject player1 = new PlayerObject();            // Sender of the SessionData
+    private PlayerObject player2 = new PlayerObject();            // The receiver for the object.
+    private PlayerObject turn = new PlayerObject();               // The player whose turn it is.  
     private int xPos;                       // X position of the move
     private int yPos;                       // Y position of the move
 
-    private int[][] senderBoardState = new int[3][3];      // The board state of the sender.
+    private PlayerObject winner = new PlayerObject();             // A winner of the game (if applicable).
+    private boolean stalemate = false;       // Whether or not the game is a stalemate.
+    private boolean gameRunning = false;     // Whether or not the game is running.
 
-    // Creates a new, empty SessionData object.
+    /**
+     * Creates an empty SessionData object.
+     */
     public SessionData() {}
 
-    public SessionData(PlayerObject player1, PlayerObject player2, int xPos, int yPos, boolean running) {
-        this.player1 = player1;
-        this.player2 = player2;
-        this.xPos = xPos;
-        this.yPos = yPos;
-        this.gameRunning = running;
-    }
-
-    public PlayerObject getPlayer1() {
-        return player1;
-    }
-
-    public PlayerObject getPlayer2() {
-        return player2;
-    }
-
-    public PlayerObject getWinner() {
-        return winner;
-    }
-
-    public int getXPos() {
-        return xPos;
-    }
-
-    public void setXPos(int x) {
+    /**
+     * Creates a SessionData object for the sole purpose of passing it to the server.
+     * @param me
+     * @param x
+     * @param y
+     */
+    public SessionData(PlayerObject me, int x, int y) {
+        turn = me;
         xPos = x;
-    }
-
-    public int getYPos() {
-        return yPos;
-    }
-
-    public void setYPos(int y) {
         yPos = y;
+        gameRunning = true;
     }
 
-    public int[][] getSenderBoardState() {
-        return senderBoardState;
-    }
+    /**
+     * Called by the {@linkplain GameHandler} to change appropriate flags in this {@linkplain SessionData} object.
+     * <p> Sets {@code gameRunning} to true and the {@code turn} to player1. Also ensures {@code winner} is null, and 
+     * {@code stalemate} is false.
+     */
+    public void startGame() {
 
-    public void setBoardState(int[][] board) {
+        if(gameRunning)
+            return;
         
-        for(int r = 0; r < 3; r++) {
-            for(int c = 0; c < 3; c++) {
-                senderBoardState[r][c] = board[r][c];
-            }
-        }
+        gameRunning = true;
+        turn = player1;             // NOTE: Here, we can add the ability to randomly choose starting player.
+        winner = null;
+        stalemate = false;
     }
 
-    public void setPlayer1(PlayerObject player1) {
-        this.player1 = player1;
-    }
-
-    public void setPlayer2(PlayerObject player2) {
-        this.player2 = player2;
-    }
-
-    public void setWinner(PlayerObject winner) {
-        this.winner = winner;
-    }
-
+    /**
+     * Checks if the game is running
+     * @return true if the game is running, false otherwise
+     */
     public boolean isRunning() {
         return gameRunning;
     }
 
-    public void startGame() {
-        gameRunning = true;
+    /**
+     * Gets Player1 in the game.
+     * @return
+     */
+    public PlayerObject getPlayer1() {
+        return player1;
     }
 
-    public void setSender(PlayerObject sender) {
-        this.sender = sender;
+    /**
+     * Gets Player2 in the game.
+     * @return
+     */
+    public PlayerObject getPlayer2() {
+        return player2;
     }
 
-    public PlayerObject getSender() {
-        return sender;
+    /**
+     * Gets the current player's turn.
+     * @return
+     */
+    public PlayerObject getCurrentTurn() {
+        return turn;
     }
 
-    public void setStalemate() {
-        stalemate = true;
+    /**
+     * Sets Player1 in the game.
+     * @param player1
+     */
+    public void setPlayer1(PlayerObject player) {
+        player1.setName(player.getName());
+        player1.setID(player.getID());
+        player1.setPawn(player.getPawn());
     }
 
+    /**
+     * Sets Player2 in the game.
+     * @param player2
+     */
+    public void setPlayer2(PlayerObject player) {
+        player2.setName(player.getName());
+        player2.setID(player.getID());
+        player2.setPawn(player.getPawn());
+    }
+
+    /**
+     * Sets the current player's turn.
+     * @param player
+     */
+    public void setCurrentTurn(PlayerObject player) {
+        turn.setName(player.getName());
+        turn.setID(player.getID());
+        turn.setPawn(player.getPawn());
+    }
+
+    /**
+     * Gets the X position of the move
+     * @return
+     */
+    public int getXPos() {
+        return xPos;
+    }
+
+    /**
+     * Gets the Y position of the move
+     * @return
+     */
+    public int getYPos() {
+        return yPos;
+    }
+
+    /**
+     * Sets the X position of the move
+     * @param x
+     */
+    public void setXPos(int x) {
+        xPos = x;
+    }
+
+    /**
+     * Sets the Y position of the move
+     * @param y
+     */
+    public void setYPos(int y) {
+        yPos = y;
+    }
+
+    /**
+     * Gets the winner of the game, if any.
+     * @return A {@linkplain PlayerObject} if there is a winner, null otherwise.
+     */
+    public PlayerObject getWinner() {
+        return winner;
+    }
+
+    /**
+     * Checks if there is a stalemate within the game
+     * @return true if there is a stalemate, false otherwise.
+     */
     public boolean seeIfStalemate() {
         return stalemate;
+    }
+
+    /**
+     * Set the winner of the game.
+     * @param winner
+     */
+    public void setWinner(PlayerObject winner) {
+        this.winner = winner;
+    }
+
+    /**
+     * Sets the stalemate flag to true.
+     */
+    public void setStalemate() {
+        stalemate = true;
     }
     
     /**
@@ -115,44 +186,31 @@ public class SessionData implements Serializable {
      */
     public void debugSessionData() {
         System.out.println("\n========== SESSION DATA OBJECT INFORMATION ==========");
-        if(getPlayer1() == null) {
+        if(player1 == null) {
             System.out.print("Player 1: NULL");
         } else {
-            System.out.print("Player 1: " + getPlayer1().getName());
+            System.out.print("Player 1: " + player1.getName());
         }
         System.out.print(" vs ");
-        if(getPlayer2() == null) {
+        if(player2 == null) {
             System.out.println("Player 2: NULL");
         } else {
-            System.out.println("Player 2: " + getPlayer2().getName());
+            System.out.println("Player 2: " + player2.getName());
         }
 
-        if(getSender() == null) {
-            System.out.println("Sender: NULL");
+        if(turn == null) {
+            System.out.println("Turn: NULL");
         } else {
-            System.out.println("Sender: " + getSender().getName());
+            System.out.println("Turn: " + turn.getName());
         }
-        System.out.println("Game running status: " + isRunning());
-        System.out.println("Stalemate status: " + seeIfStalemate());
-        System.out.println("Associated coordinates: " + getXPos() + ", " + getYPos());
+        System.out.println("Game running status: " + gameRunning);
+        System.out.println("Stalemate status: " + stalemate);
+        System.out.println("Associated coordinates: " + xPos + ", " + yPos);
 
-        System.out.println("BOARD STATE:");
-
-        if(senderBoardState == null) {
-            System.out.println("Waiting for game start...");
-        } else {
-            for(int i = 0; i < 3; i++) {
-                for(int j = 0; j < 3; j++) {
-                    System.out.print(senderBoardState[i][j] + " ");
-                }
-                System.out.println();
-            }
-        }
-
-        if(getWinner() == null) {
+        if(winner == null) {
             System.out.println("Winner: none");
         } else {
-            System.out.println("Winner: " + getWinner().getName());
+            System.out.println("Winner: " + winner.getName());
         }
         System.out.println("=====================================================\n");
     }
