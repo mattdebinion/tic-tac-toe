@@ -151,7 +151,6 @@ public class Client extends Application {
                         PlayerObject playerInfo = (PlayerObject) dataReceived;
 
                         if(playerInfo.getName().equals("PLAYER 1")) {
-
                             me.setName(SetPlayerOneController.getInputText());
                             me.setPawn('X');
                             me.setID(1);
@@ -161,7 +160,7 @@ public class Client extends Application {
                             updatePlayers(player1, player2);
 
                         } else if (playerInfo.getName().equals("PLAYER 2")) {
-
+                            System.out.println("I'm player two!");
                             me.setName(SetPlayerOneController.getInputText());
                             me.setPawn('O');
                             me.setID(2);
@@ -193,7 +192,6 @@ public class Client extends Application {
                                 sendInfo(newData);
 
                             } else if(me.getID() == 1) {
-
                                 newData.setPlayer1(me);
                                 newData.setSender(me);
                                 updatePlayers(newData.getPlayer1(), newData.getPlayer2());
@@ -205,7 +203,6 @@ public class Client extends Application {
                                 newData.setSender(me);
                                 updatePlayers(newData.getPlayer1(), newData.getPlayer2());
                                 sendInfo(newData);
-
                             }
 
 
@@ -253,8 +250,8 @@ public class Client extends Application {
 
     /**
      * Update player names within the UI and the client.
-     * @param me
-     * @param opponent
+     * @param player1
+     * @param player2
      */
     private void updatePlayers(PlayerObject player1, PlayerObject player2) {
 

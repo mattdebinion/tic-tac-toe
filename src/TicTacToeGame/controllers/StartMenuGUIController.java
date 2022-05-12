@@ -28,7 +28,9 @@ public class StartMenuGUIController {
     }
 
     @FXML public void switchToCredits(ActionEvent event) throws IOException {
-        
+        Parent root = FXMLLoader.load(getClass().getResource("../fxml/Credits.fxml"));
+        Stage window = (Stage) localGame.getScene().getWindow();
+        window.setScene(new Scene(root));
     }
 
     @FXML public void logout(ActionEvent event) throws IOException {
