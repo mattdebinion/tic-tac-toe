@@ -31,6 +31,7 @@ public class Client extends Application {
     private PlayerObject me;                 // Holds the information about the player from the GUI.
     private PlayerObject player1;                        // Holds player 1 within the game
     private PlayerObject player2;                        // Holds player 2 within the game
+    private int[][] board;                              // Holds the board
 
     // CONNECTION INFORMATION
     private static Socket socket;
@@ -60,12 +61,16 @@ public class Client extends Application {
         stage.show();
     }
 
+    /**
+     * Creates an empty client.
+     */
     public Client(){}
+
     /**
      * Connects to the server assuming the server is online.
      * <p>It's best to call this function before the Tic Tac Toe board is loaded.
-     * @param gameController
-     * @param clientInfo
+     * @param boardController
+     * @param me 
      */
     public Client(TicTacBoardController gameController, PlayerObject clientInfo) {
 
@@ -113,9 +118,13 @@ public class Client extends Application {
 
     public void sendMove(int row, int col) throws InvalidMoveException, IOException {
         SessionData dataToSend = new SessionData(player1, player2, row, col, true);
+        board[row][col] = me.getID();
         dataToSend.setSender(me);
+        dataToSend.setBoardState(board);
 
-        System.out.println("Sending move at " + row + ", " + col);
+        // System.out.println("SENDING THIS BOARD: ");
+        // outputBoard();
+
         objOut.writeObject(dataToSend);
         objOut.flush();
 
@@ -167,17 +176,17 @@ public class Client extends Application {
                         SessionData decodedData = (SessionData) dataReceived;
                         SessionData newData = decodedData;
 
-                        System.out.println("RECEIVED:");
-                        decodedData.debugSessionData();
-
                         // The initial sent message will be a null SessionData object This lets the client know to send about me to other client.
                         if(!decodedData.isRunning()) {
                             
                             newData.setXPos(-1);
                             newData.setYPos(-1);
+                            board = new int[3][3];      // Initialize a new empty board
+
                             if(decodedData.getPlayer1() != null && decodedData.getPlayer2() != null) {
                                 newData.startGame();
                                 newData.setSender(me);
+
                                 updatePlayers(decodedData.getPlayer1(), decodedData.getPlayer2());
                                 controller.updateStatusLabel("The game has started! Waiting for opponent to move...");
                                 sendInfo(newData);
@@ -187,7 +196,9 @@ public class Client extends Application {
                                 newData.setSender(me);
                                 updatePlayers(newData.getPlayer1(), newData.getPlayer2());
                                 sendInfo(newData);
+
                             } else if(me.getID() == 2) {
+
                                 newData.setPlayer2(me);
                                 newData.setSender(me);
                                 updatePlayers(newData.getPlayer1(), newData.getPlayer2());
@@ -196,9 +207,25 @@ public class Client extends Application {
 
 
                         } else {
+                            
+                            if(decodedData.getWinner() != null) {
+
+                                controller.updateStatusLabel(decodedData.getWinner().getName() + " has won!");
+
+                            } else if(decodedData.seeIfStalemate()) {
+
+                                controller.updateStatusLabel("It's a draw!");
+
                             // If the associated sender is not my name, then it's my turn. Unlock the board.
-                            if(!decodedData.getSender().getName().equals(me.getName())) {
-                                controller.updateBoardAt(decodedData.getXPos(), decodedData.getYPos(), decodedData.getSender());
+                            } else if(!decodedData.getSender().getName().equals(me.getName())) {
+
+                                // Disregard -1,-1 move value.
+                                if(decodedData.getXPos() != -1 && decodedData.getYPos() != -1) {
+
+                                    controller.updateBoardAt(decodedData.getXPos(), decodedData.getYPos(), decodedData.getSender());
+                                    board[decodedData.getXPos()][decodedData.getYPos()] = decodedData.getSender().getID();      // Update the board locally.
+
+                                }
                                 controller.changeBoardLock(false);
                                 
                                 // If the given sender is the same as the client, it's the other player's turn.
