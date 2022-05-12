@@ -41,14 +41,14 @@ public class GameHandler implements Runnable {
                 SessionData dataToReceive = (SessionData) fromPlayer1.readObject();
 
                 if(dataToReceive instanceof SessionData) {
-                    System.out.println("Received data from player1, sending it to player 2...");
+                    System.out.println("Received data from " + dataToReceive.getSender().getName() + ", sending it to player 2...");
                     sendSessionData(toPlayer2, dataToReceive);
                 }
 
                 SessionData dataToReceive2 = (SessionData) fromPlayer2.readObject();
 
                 if(dataToReceive2 instanceof SessionData) {
-                    System.out.println("Received data from player2, sending it to player 1...");
+                    System.out.println("Received data from " + dataToReceive2.getSender().getName() + ", sending it to player 1...");
                     sendSessionData(toPlayer1, dataToReceive2);
                 }
                 
@@ -69,6 +69,4 @@ public class GameHandler implements Runnable {
         destination.writeObject(dataToSend);
         destination.flush();
     }
-
-    
 }

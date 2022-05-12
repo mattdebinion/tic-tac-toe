@@ -20,6 +20,7 @@ public class SetPlayersController {
     
     @FXML
     Button onePlayerMode, twoPlayerMode, quitButton;
+    static boolean onePlayer = false;
     
     /**
      * PlayerOneMode will start as a Local LAN game.
@@ -27,6 +28,7 @@ public class SetPlayersController {
      * @throws IOException
      */
     @FXML public void PlayerOneMode(ActionEvent event) throws IOException {
+        onePlayer = true;
         Parent root = FXMLLoader.load(getClass().getResource("../fxml/SetPlayerOne.fxml"));
         Stage window = (Stage) onePlayerMode.getScene().getWindow();
         window.setScene(new Scene(root));
@@ -52,5 +54,9 @@ public class SetPlayersController {
     @FXML public void logout(ActionEvent event) throws IOException {
         Stage window = (Stage) quitButton.getScene().getWindow();
         window.close();
+    }
+
+    public static boolean isOnePlayerGame() {
+        return onePlayer;
     }
 }

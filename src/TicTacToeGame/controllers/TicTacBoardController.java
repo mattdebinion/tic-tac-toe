@@ -3,6 +3,7 @@ package TicTacToeGame.controllers;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import TicTacToeGame.AIPlayer;
 import TicTacToeGame.Client;
 import TicTacToeGame.PlayerObject;
 import TicTacToeGame.exceptions.InvalidMoveException;
@@ -24,19 +25,34 @@ public class TicTacBoardController {
     @FXML Label PlayerDisplay1, PlayerDisplay2, gameStatus;
     @FXML Button menuBtn2, restartBtn2, quitGame, square11, square12, square13, square21, square22, square23, square31, square32, square33;
     @FXML GridPane GameBoard;
-    
+    char[][] boardState;
+    AIPlayer aiPlayer;
+
     static Client associatedClient;
 
     @FXML
     public void initialize() throws UnknownHostException {
+        boardState = new char[3][3];
+        for(int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                boardState[i][j] = ' ';
+            }
+        }
 
         System.out.println("Connecting...");
-        associatedClient = new Client(this, new PlayerObject("ME", 'M', true));
-        
-        PlayerDisplay1.setText("Player 1: ...");
-        PlayerDisplay2.setText("Player 2: ...");
-        changeBoardLock(true);
-        updateStatusLabel("Waiting for player 2...");
+        if(SetPlayersController.isOnePlayerGame()) {
+            aiPlayer = new AIPlayer();
+            associatedClient = new Client(this, new PlayerObject("ME", 'M', true), null);
+            PlayerDisplay1.setText("Player 1: ...");
+            PlayerDisplay2.setText("Player 2: ...");
+            boardLocked(true);
+        } else {
+            associatedClient = new Client(this, new PlayerObject("ME", 'M', true));
+            PlayerDisplay1.setText("Player 1: ...");
+            PlayerDisplay2.setText("Player 2: ...");
+            boardLocked(true);
+            updateStatusLabel("Waiting for player 2...");
+        }
     }
 
     /**
@@ -106,6 +122,7 @@ public class TicTacBoardController {
             squareButton.setFont(f);
             squareButton.setStyle("-fx-text-fill: red");
             squareButton.setText(Character.toString(player.getPawn()));
+            boardState[x][y] = player.getPawn();
             squareButton.setDisable(true);
         });
     }
@@ -121,7 +138,7 @@ public class TicTacBoardController {
      * Updates the board lock, unlocks squares that are empty.
      * @param state
      */
-    public void changeBoardLock(boolean state) {
+    public void boardLocked(boolean state) {
         Platform.runLater(() -> {
             square11.setDisable(square11.getText().length() >= 1 ? true : state);
             square12.setDisable(square12.getText().length() >= 1 ? true : state);
@@ -146,4 +163,5 @@ public class TicTacBoardController {
             PlayerDisplay2.setText("Player 2: " + player.getName());
         });
     }
+
 }

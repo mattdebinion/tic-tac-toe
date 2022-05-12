@@ -9,10 +9,12 @@ import TicTacToeGame.controllers.SetPlayerOneController;
 import TicTacToeGame.controllers.TicTacBoardController;
 import TicTacToeGame.exceptions.InvalidMoveException;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * The Client class (an observer).
@@ -29,6 +31,7 @@ public class Client extends Application {
 
     // GAME INFORMATION
     private PlayerObject me;                 // Holds the information about the player from the GUI.
+    private PlayerObject ai;
     private PlayerObject player1;                        // Holds player 1 within the game
     private PlayerObject player2;                        // Holds player 2 within the game
 
@@ -44,7 +47,6 @@ public class Client extends Application {
     private Scene scene;
 
 
-    
     /**
      * Starts a new client and launches the GUI to interact with the game.
      */
@@ -58,6 +60,7 @@ public class Client extends Application {
         stage.setTitle("Tic Tac Toe");
         stage.setScene(scene);
         stage.show();
+
     }
 
     public Client(){}
@@ -71,6 +74,27 @@ public class Client extends Application {
 
         controller = gameController;
         me = clientInfo;
+
+        try {
+            socket = new Socket(host, 60);                            // Create a socket to the server
+            objIn = new ObjectInputStream(socket.getInputStream());         // Get input stream
+            objOut = new ObjectOutputStream(socket.getOutputStream());      // Get output stream
+            objOut.flush();
+
+        } catch (Exception e) {
+            System.out.println("An error occurred while attempting to connect to the server.");
+            e.printStackTrace();
+            disconnect();
+        }
+
+        listen();
+    }
+
+    public Client(TicTacBoardController gameController, PlayerObject clientInfo, PlayerObject ai) {
+
+        controller = gameController;
+        me = clientInfo;
+        this.ai = ai;
 
         try {
             socket = new Socket(host, 60);                            // Create a socket to the server
@@ -119,12 +143,10 @@ public class Client extends Application {
         objOut.writeObject(dataToSend);
         objOut.flush();
 
-        controller.changeBoardLock(true);
+        controller.boardLocked(true);
         controller.updateBoardAt(row, col, me);
     }
 
-
-    
     /**
      * Listens to broadcasted messages from the input stream as long as the {@linkplain Socket} is connected.
      * <p>Before invoking the {@code listen()} function, the {@code connect()} function must be called.
@@ -142,6 +164,7 @@ public class Client extends Application {
                         PlayerObject playerInfo = (PlayerObject) dataReceived;
 
                         if(playerInfo.getName().equals("PLAYER 1")) {
+                            System.out.println("I'm player one!");
                             me.setName(SetPlayerOneController.getInputText());
                             me.setPawn('X');
                             me.setID(1);
@@ -199,7 +222,7 @@ public class Client extends Application {
                             // If the associated sender is not my name, then it's my turn. Unlock the board.
                             if(!decodedData.getSender().getName().equals(me.getName())) {
                                 controller.updateBoardAt(decodedData.getXPos(), decodedData.getYPos(), decodedData.getSender());
-                                controller.changeBoardLock(false);
+                                controller.boardLocked(false);
                                 
                                 // If the given sender is the same as the client, it's the other player's turn.
                                 if(decodedData.getSender().getName().equals(decodedData.getPlayer1().getName())) {
@@ -219,6 +242,7 @@ public class Client extends Application {
             }
 
         }).start();
+
     }
 
     /**
@@ -228,13 +252,14 @@ public class Client extends Application {
      */
     private void updatePlayers(PlayerObject player1, PlayerObject player2) {
 
-        if(player1 != null)
+        if(player1 != null) {
             this.player1 = player1;
             controller.SetPlayer1(player1);
-
-        if(player2 != null)
+        }
+        if(player2 != null) {
             controller.SetPlayer2(player2);
             this.player2 = player2;
+        }
     }
 
     public PlayerObject getPlayer1() {
@@ -244,5 +269,10 @@ public class Client extends Application {
     public PlayerObject getPlayer2() {
         return player2;
     }
-    
+
+    public static TicTacBoardController getController() {
+        return controller;
+    }
+
+
 }

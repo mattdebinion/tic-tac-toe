@@ -18,20 +18,16 @@ import java.time.format.DateTimeFormatter;
  */
 public class Server {
 
+    private final ServerSocket SOCKET;
+    private final static DateTimeFormatter SERVER_TIME_FORMAT = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss a");
+
     /**
      * Starts the server.
      * @param args Command line arguments.
      */
     public static void main(String[] args) {
-        // String systemIPAddress = "";
 
         try {
-            // // Amazon will return the IP address of this machine when visiting this link.
-            // URL url = new URL("https://checkip.amazonaws.com/");
-
-            // BufferedReader sc = new BufferedReader(new InputStreamReader(url.openStream()));
-            // String systemIPAddress = sc.readLine().trim();
-
             // Start the server on unassigned port 60.
             ServerSocket serverSocket = new ServerSocket(60);
             Server server = new Server(serverSocket);
@@ -42,11 +38,6 @@ public class Server {
             System.out.println(e.getMessage());
         }
     }
-
-
-
-    private final ServerSocket SOCKET;
-    private final static DateTimeFormatter SERVER_TIME_FORMAT = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss a");
 
     /**
      * Creates a server given a ServerSocket object.
