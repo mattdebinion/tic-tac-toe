@@ -12,15 +12,17 @@ public class SessionData implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private PlayerObject player1 = new PlayerObject();            // Sender of the SessionData
-    private PlayerObject player2 = new PlayerObject();            // The receiver for the object.
-    private PlayerObject turn = new PlayerObject();               // The player whose turn it is.  
+    private PlayerObject player1;            // Sender of the SessionData
+    private PlayerObject player2;            // The receiver for the object.
+    private PlayerObject lastTurn;          // The previous player's turn.
+    private PlayerObject turn;               // The player whose turn it is.  
     private int xPos;                       // X position of the move
     private int yPos;                       // Y position of the move
 
-    private PlayerObject winner = new PlayerObject();             // A winner of the game (if applicable).
+    private PlayerObject winner;             // A winner of the game (if applicable).
     private boolean stalemate = false;       // Whether or not the game is a stalemate.
     private boolean gameRunning = false;     // Whether or not the game is running.
+    private boolean reset = false;           // Let the server know that the game wants to been reset.
 
     /**
      * Creates an empty SessionData object.
@@ -34,10 +36,10 @@ public class SessionData implements Serializable {
      * @param y
      */
     public SessionData(PlayerObject me, int x, int y) {
-        turn = me;
-        xPos = x;
-        yPos = y;
-        gameRunning = true;
+        this.turn = me;
+        this.xPos = x;
+        this.yPos = y;
+        this.gameRunning = true;
     }
 
     /**
@@ -50,10 +52,10 @@ public class SessionData implements Serializable {
         if(gameRunning)
             return;
         
-        gameRunning = true;
-        turn = player1;             // NOTE: Here, we can add the ability to randomly choose starting player.
-        winner = null;
-        stalemate = false;
+        this.gameRunning = true;
+        this.turn = player1;             // NOTE: Here, we can add the ability to randomly choose starting player.
+        this.winner = null;
+        this.stalemate = false;
     }
 
     /**
@@ -62,6 +64,14 @@ public class SessionData implements Serializable {
      */
     public boolean isRunning() {
         return gameRunning;
+    }
+
+    /**
+     * Checks if the game needs to be reset
+     * @return true if reset needs to happen, false otherwise.
+     */
+    public boolean checkForReset() {
+        return reset;
     }
 
     /**
@@ -89,13 +99,19 @@ public class SessionData implements Serializable {
     }
 
     /**
+     * Returns the last player's turn.
+     * @return
+     */
+    public PlayerObject getLastTurn() {
+        return lastTurn;
+    }
+
+    /**
      * Sets Player1 in the game.
      * @param player1
      */
     public void setPlayer1(PlayerObject player) {
-        player1.setName(player.getName());
-        player1.setID(player.getID());
-        player1.setPawn(player.getPawn());
+        this.player1 = player;
     }
 
     /**
@@ -103,9 +119,7 @@ public class SessionData implements Serializable {
      * @param player2
      */
     public void setPlayer2(PlayerObject player) {
-        player2.setName(player.getName());
-        player2.setID(player.getID());
-        player2.setPawn(player.getPawn());
+        this.player2 = player;
     }
 
     /**
@@ -113,9 +127,8 @@ public class SessionData implements Serializable {
      * @param player
      */
     public void setCurrentTurn(PlayerObject player) {
-        turn.setName(player.getName());
-        turn.setID(player.getID());
-        turn.setPawn(player.getPawn());
+        lastTurn = turn;
+        this.turn = player;
     }
 
     /**
@@ -139,7 +152,7 @@ public class SessionData implements Serializable {
      * @param x
      */
     public void setXPos(int x) {
-        xPos = x;
+        this.xPos = x;
     }
 
     /**
@@ -147,7 +160,7 @@ public class SessionData implements Serializable {
      * @param y
      */
     public void setYPos(int y) {
-        yPos = y;
+        this.yPos = y;
     }
 
     /**
@@ -171,6 +184,7 @@ public class SessionData implements Serializable {
      * @param winner
      */
     public void setWinner(PlayerObject winner) {
+        lastTurn = winner;
         this.winner = winner;
     }
 
@@ -179,6 +193,13 @@ public class SessionData implements Serializable {
      */
     public void setStalemate() {
         stalemate = true;
+    }
+
+    /**
+     * Updates the reset flag to true to let all clients know to clear their boards and lock the reset button.
+     */
+    public void resetGame() {
+        this.reset = true;
     }
     
     /**
@@ -196,6 +217,12 @@ public class SessionData implements Serializable {
             System.out.println("Player 2: NULL");
         } else {
             System.out.println("Player 2: " + player2.getName());
+        }
+
+        if(lastTurn == null) {
+            System.out.println("Last Turn: NULL");
+        } else {
+            System.out.println("Last Turn: " + lastTurn.getName());
         }
 
         if(turn == null) {

@@ -54,11 +54,11 @@ public class GameHandler implements Runnable {
                 // ==============================
                 // HANDLE PLAYER ONE.
                 // ==============================
-                Object player1ReceivedData = fromPlayer1.readObject();      // Receive the data from Player 1.
+                Object dataReading = fromPlayer1.readUnshared();      // Receive the data from Player 1.
 
                 // IF player 1 has sent a player object, this means they are newly connected to the server.
-                if(player1ReceivedData instanceof PlayerObject) {
-                    PlayerObject player = (PlayerObject) player1ReceivedData;
+                if(dataReading instanceof PlayerObject) {
+                    PlayerObject player = (PlayerObject) dataReading;
                     System.out.print("The player " + player.getName() + " has connected! ");
 
                     // Assign player to next available slot that is empty within this handler.
@@ -82,29 +82,33 @@ public class GameHandler implements Runnable {
                     }
                 }
 
+                System.out.println("Switching");
+                if(dataReading instanceof SessionData) {
+                    SessionData dataToReceive = (SessionData) dataReading;
+                    System.out.println("SessionData received from player 1! Sending moves: " + dataToReceive.getXPos() + ", " + dataToReceive.getYPos());
 
-                if(player1ReceivedData instanceof SessionData) {
-                    SessionData dataToReceive = (SessionData) player1ReceivedData;
-                    System.out.println("SessionData received from player 1:");
-                    dataToReceive.debugSessionData();
+                    // Handle reset request given -2, -2:
+                    if(dataToReceive.getXPos() == -2 && dataToReceive.getYPos() == -2) {
+                        System.out.println("Reset request received from player 1!");
+                        startGame();
+                        continue;
+                    }
 
                     if(dataToReceive.isRunning()) {
                         dataToReceive = verifyMove(dataToReceive);
                     }
 
-                    System.out.print("SessionData sending to player 2:");
-                    dataToReceive.debugSessionData();
-                    sendSessionData(toPlayer2, dataToReceive);
+                    broadcastSessionData(dataToReceive);
                 }
 
                 // ==============================
                 // HANDLE PLAYER TWO.
                 // ==============================
-                Object player2ReceivedData = fromPlayer2.readObject();      // Receive the data from Player 1.
+                dataReading = fromPlayer2.readUnshared();      // Receive the data from Player 1.
 
                 // IF player 1 has sent a player object, this means they are newly connected to the server.
-                if(player2ReceivedData instanceof PlayerObject) {
-                    PlayerObject player = (PlayerObject) player2ReceivedData;
+                if(dataReading instanceof PlayerObject) {
+                    PlayerObject player = (PlayerObject) dataReading;
                     System.out.print("The player " + player.getName() + " has connected! ");
 
                     // Assign player to next available slot that is empty within this handler.
@@ -128,18 +132,22 @@ public class GameHandler implements Runnable {
                     }
                 }
 
-                if(player2ReceivedData instanceof SessionData) {
-                    SessionData dataToReceive = (SessionData) player1ReceivedData;
-                    System.out.println("SessionData received from player 2:");
-                    dataToReceive.debugSessionData();
+                if(dataReading instanceof SessionData) {
+                    SessionData dataToReceive2 = (SessionData) dataReading;
+                    System.out.println("SessionData received from player 2! Sending moves " + dataToReceive2.getXPos() + ", " + dataToReceive2.getYPos());
 
-                    if(dataToReceive.isRunning()) {
-                        dataToReceive = verifyMove(dataToReceive);
+                    // Handle reset request given -2, -2:
+                    if(dataToReceive2.getXPos() == -2 && dataToReceive2.getYPos() == -2) {
+                        System.out.println("Reset request received from player 2!");
+                        startGame();
+                        continue;
                     }
 
-                    System.out.println("SessionData sending to player 1");
-                    dataToReceive.debugSessionData();
-                    sendSessionData(toPlayer2, dataToReceive);
+                    if(dataToReceive2.isRunning()) {
+                        dataToReceive2 = verifyMove(dataToReceive2);
+                    }
+
+                    broadcastSessionData(dataToReceive2);
                 }
 
             }
@@ -152,24 +160,13 @@ public class GameHandler implements Runnable {
     }
 
     /**
-     * Sends given session data to the given output stream.
-     * @param destination
-     * @param dataToSend
-     * @throws IOException
-     */
-    private void sendSessionData(ObjectOutputStream destination, SessionData dataToSend) throws IOException {
-        destination.writeObject(dataToSend);
-        destination.flush();
-    }
-
-    /**
      * Sends a session data object to all output streams.
      * @throws IOException Occurs if not connected to the Internet.
      */
     private void broadcastSessionData(SessionData dataToSend) throws IOException {
 
-        toPlayer1.writeObject(dataToSend);
-        toPlayer2.writeObject(dataToSend);
+        toPlayer1.writeUnshared(dataToSend);
+        toPlayer2.writeUnshared(dataToSend);
         toPlayer1.flush();
         toPlayer2.flush();
     }
@@ -180,6 +177,7 @@ public class GameHandler implements Runnable {
      */
     private void startGame() throws IOException {
         SessionData startGameData = new SessionData();
+        board = new int[3][3];
         startGameData.setPlayer1(player1Object);
         startGameData.setPlayer2(player2Object);
         startGameData.setCurrentTurn(player1Object);
@@ -226,7 +224,7 @@ public class GameHandler implements Runnable {
      * @return The same SessionData object if no winning or stalemate move was made, otherwise a new SessionData object indicating winner.
      */
     private SessionData verifyMove(SessionData dataToVerify) {
-        System.out.println("Verifying move for " + dataToVerify.getCurrentTurn().getName());
+        System.out.print("Verifying move for " + dataToVerify.getCurrentTurn().getName() + ". ");
         PlayerObject player = nameToPlayerObject(dataToVerify.getCurrentTurn().getName());     // Get player to check.
         System.out.println("They have an ID of " + player.getID() + " and a pawn of " + player.getPawn());
 
@@ -285,8 +283,9 @@ public class GameHandler implements Runnable {
                 // If there is a zero at any position, then it is unfilled. Return but make sure it's the other player's turn.
                 if(board[row][col] == 0) {
 
-                    System.out.println("No passing move, switching turns...");
+                    System.out.print("No passing move, switching turns... ");
                     switchTurns(dataToReturn);
+                    System.out.println("Sending move to " + dataToReturn.getCurrentTurn().getName());
                     return dataToReturn;
                 }
             }

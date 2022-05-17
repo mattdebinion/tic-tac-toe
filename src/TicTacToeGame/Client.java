@@ -37,7 +37,7 @@ public class Client extends Application {
 
 
     // GUI INTERACTION INFORMATION
-    private static TicTacBoardController controller;
+    private TicTacBoardController controller;
     private Scene scene;
 
 
@@ -105,18 +105,25 @@ public class Client extends Application {
      */
     public void sendInfo(Object object) {
         try {
-            objOut.writeObject(object);
+            objOut.writeUnshared(object);
             objOut.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Given and x or y move, send it to the server.
+     * @param row The row of the move.
+     * @param col The column of the move.
+     * @throws InvalidMoveException
+     * @throws IOException
+     */
     public void sendMove(int row, int col) throws InvalidMoveException, IOException {
         SessionData dataToSend = new SessionData(me, row, col);
 
         System.out.println("Sending move at " + row + ", " + col);
-        objOut.writeObject(dataToSend);
+        objOut.writeUnshared(dataToSend);
         objOut.flush();
 
         controller.changeBoardLock(true);
@@ -135,7 +142,7 @@ public class Client extends Application {
 
             while(socket.isConnected()) {
                 try {
-                    Object dataReceived = objIn.readObject();
+                    Object dataReceived = objIn.readUnshared();
 
                     // Send me information to the server.
                     if(dataReceived instanceof PlayerObject) {
@@ -147,16 +154,35 @@ public class Client extends Application {
                     if(dataReceived instanceof SessionData) {
                         SessionData decodedData = (SessionData) dataReceived;
 
-                        System.out.println("RECEIVED FROM SERVER:");
-                        decodedData.debugSessionData();
+                        // Check if decoded data has -1 for row or col. If so, it's prompting to update GUIs players.
+                        // Check if decoded data has -2 for row or col. If so, it's prompting to clear GUI and disable reset button.
+                        if(decodedData.getXPos() == -1 && decodedData.getYPos() == -1) {
+                            modifyMe(decodedData);
+                        } else if(decodedData.getXPos() == -2 && decodedData.getYPos() == -2) {
+                            controller.clearBoard();
+                            controller.changeResetButton(true);
+                            continue;
+                        }
 
                         controller.updateStatusLabel(decodedData.getCurrentTurn().getName() + "'s turn!");
-                        modifyMe(decodedData);
 
                         // Check if the game is running.
                         if(decodedData.isRunning()) {
                             updatePlayers(decodedData);
-                            controller.updateBoardAt(decodedData.getXPos(), decodedData.getYPos(), decodedData.getCurrentTurn());
+                            controller.updateBoardAt(decodedData.getXPos(), decodedData.getYPos(), decodedData.getLastTurn());
+
+                            // Display message for stalemate
+                            if(decodedData.seeIfStalemate()) {
+                                controller.updateStatusLabel("Stalemate!");
+                                controller.changeResetButton(false);
+                            }
+
+                            // Display winner.
+                            if(decodedData.getWinner() != null) {
+                                controller.updateStatusLabel(decodedData.getWinner().getName() + " won!");
+                                controller.changeBoardLock(true);
+                                controller.changeResetButton(false);
+                            }
 
                             // If the current turn is my name, then it's my turn!
                             if(decodedData.getCurrentTurn().getName().equals(me.getName())){

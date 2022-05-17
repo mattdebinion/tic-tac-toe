@@ -98,8 +98,17 @@ public class TicTacBoardController {
         window.setScene(new Scene(root));
     }
 
-    @FXML public void newGame(ActionEvent event) throws IOException {
+    /**
+     * Clears the board and awaits new moves.
+     * @param event
+     * @throws IOException
+     * @throws InvalidMoveException
+     */
+    @FXML public void newGame(ActionEvent event) throws IOException, InvalidMoveException {
         
+        restartBtn2.setDisable(true);
+        clearBoard();
+        associatedClient.sendMove(-2, -2);
     }
 
     /**
@@ -134,6 +143,18 @@ public class TicTacBoardController {
         });
     }
 
+    /**
+     * Clears the entire board.
+     */
+    public void clearBoard() {
+        for(int i = 0; i < 3; i++) {
+            for(int j = 0; j < 3; j++) {
+                Button square = (Button) GameBoard.getChildren().get(i*3 + j);
+                square.setText("");
+            }
+        }
+    }
+
     public void updateStatusLabel(String message) {
         Platform.runLater(() -> {
             gameStatus.setText(message);
@@ -156,6 +177,16 @@ public class TicTacBoardController {
             square31.setDisable(square31.getText().length() >= 1 ? true : state);
             square32.setDisable(square32.getText().length() >= 1 ? true : state);
             square33.setDisable(square33.getText().length() >= 1 ? true : state);
+        });
+    }
+
+    /**
+     * Update the reset button lock.
+     * @param state
+     */
+    public void changeResetButton(boolean state) {
+        Platform.runLater(() -> {
+            restartBtn2.setDisable(state);
         });
     }
 
