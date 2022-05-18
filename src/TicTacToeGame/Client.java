@@ -156,12 +156,12 @@ public class Client extends Application {
 
                         // Check if decoded data has -1 for row or col. If so, it's prompting to update GUIs players.
                         // Check if decoded data has -2 for row or col. If so, it's prompting to clear GUI and disable reset button.
-                        if(decodedData.getXPos() == -1 && decodedData.getYPos() == -1) {
-                            modifyMe(decodedData);
-                        } else if(decodedData.getXPos() == -2 && decodedData.getYPos() == -2) {
+                        if(decodedData.getXPos() == -2 && decodedData.getYPos() == -2) {
+                            System.out.println("Reset called, clearing board!");
                             controller.clearBoard();
                             controller.changeResetButton(true);
-                            continue;
+                        } else if(decodedData.getXPos() == -1 && decodedData.getYPos() == -1) {
+                            modifyMe(decodedData);
                         }
 
                         controller.updateStatusLabel(decodedData.getCurrentTurn().getName() + "'s turn!");
