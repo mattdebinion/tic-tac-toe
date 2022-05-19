@@ -37,12 +37,13 @@ public class LocalPlayController {
      */
     @FXML public void setTwoAsAI(ActionEvent event) {
         String[] names = {"Matt", "Nika", "Elihas"};
-        
+
         Platform.runLater(() -> {
             if (isAI.isSelected()) {
                 player2name.setText("AI " + names[(int) (Math.random() * names.length)]);
                 player2name.setDisable(true);
             } else {
+                player2name.setText("");
                 player2name.setDisable(false);
             }
         });
