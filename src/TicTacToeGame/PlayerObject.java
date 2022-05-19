@@ -12,6 +12,8 @@ import java.net.UnknownHostException;
  */
 public class PlayerObject implements Serializable {
     
+    private static final long serialVersionUID = 1L;
+    
     // PLAYER INFORMATION \\
     private String name;            // The name of the player object.
     private boolean isAI = false;   // Flag to determine if Controller should handle this PlayerObject as an AI player.
@@ -23,6 +25,17 @@ public class PlayerObject implements Serializable {
      * Creates a PlayerObject with no information.
      */
     public PlayerObject() {}
+
+    /**
+     * Creates a PlayerObject with the given name and associated IP.
+     * @param name The name of the player
+     * @param isHuman A flag determining if the player is an AI or not.
+     * @throws UnknownHostException
+     */
+    public PlayerObject(String name, boolean isHuman) throws UnknownHostException {
+        this.name = name;
+        playerIP = InetAddress.getLocalHost();
+    }
     
     /**
      * Creates a new PlayerObject with a name, pawn, and if player is human.

@@ -5,7 +5,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import TicTacToeGame.controllers.SetPlayerOneController;
 import TicTacToeGame.controllers.TicTacBoardController;
 import TicTacToeGame.exceptions.InvalidMoveException;
 import javafx.application.Application;
@@ -29,9 +28,6 @@ public class Client extends Application {
 
     // GAME INFORMATION
     private PlayerObject me;                 // Holds the information about the player from the GUI.
-    private PlayerObject player1;                        // Holds player 1 within the game
-    private PlayerObject player2;                        // Holds player 2 within the game
-    private int[][] board;                              // Holds the board
 
     // CONNECTION INFORMATION
     private static Socket socket;
@@ -41,7 +37,7 @@ public class Client extends Application {
 
 
     // GUI INTERACTION INFORMATION
-    private static TicTacBoardController controller;
+    private TicTacBoardController controller;
     private Scene scene;
 
 
@@ -109,23 +105,25 @@ public class Client extends Application {
      */
     public void sendInfo(Object object) {
         try {
-            objOut.writeObject(object);
+            objOut.writeUnshared(object);
             objOut.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Given and x or y move, send it to the server.
+     * @param row The row of the move.
+     * @param col The column of the move.
+     * @throws InvalidMoveException
+     * @throws IOException
+     */
     public void sendMove(int row, int col) throws InvalidMoveException, IOException {
-        SessionData dataToSend = new SessionData(player1, player2, row, col, true);
-        board[row][col] = me.getID();
-        dataToSend.setSender(me);
-        dataToSend.setBoardState(board);
+        SessionData dataToSend = new SessionData(me, row, col);
 
-        // System.out.println("SENDING THIS BOARD: ");
-        // outputBoard();
-
-        objOut.writeObject(dataToSend);
+        System.out.println("Sending move at " + row + ", " + col);
+        objOut.writeUnshared(dataToSend);
         objOut.flush();
 
         controller.changeBoardLock(true);
@@ -144,96 +142,52 @@ public class Client extends Application {
 
             while(socket.isConnected()) {
                 try {
-                    Object dataReceived = objIn.readObject();
+                    Object dataReceived = objIn.readUnshared();
 
-                    // Once the client connects, it will receive a PlayerObject detailing if it's player 1 or 2.
+                    // Send me information to the server.
                     if(dataReceived instanceof PlayerObject) {
-                        PlayerObject playerInfo = (PlayerObject) dataReceived;
-
-                        if(playerInfo.getName().equals("PLAYER 1")) {
-                            me.setName(SetPlayerOneController.getInputText());
-                            me.setPawn('X');
-                            me.setID(1);
-                            player1 = me;   // Assign player 1 with my object.
-
-                            System.out.println(player1.getName() + " is player 1 with pawn " + player1.getPawn());
-                            updatePlayers(player1, player2);
-
-                        } else if (playerInfo.getName().equals("PLAYER 2")) {
-                            System.out.println("I'm player two!");
-                            me.setName(SetPlayerOneController.getInputText());
-                            me.setPawn('O');
-                            me.setID(2);
-                            player2 = me;   // Assign player 2 with my object.
-
-                            System.out.println(player2.getName() + " is player 2 with pawn " + player2.getPawn());
-                            updatePlayers(player1, player2);
-                        }
+                        System.out.println("Sending my name to the server! My name is " + me.getName());
+                        sendInfo(me);
                     }
 
                     // SessionData objects keep track of game progress!
                     if(dataReceived instanceof SessionData) {
                         SessionData decodedData = (SessionData) dataReceived;
-                        SessionData newData = decodedData;
 
-                        // The initial sent message will be a null SessionData object This lets the client know to send about me to other client.
-                        if(!decodedData.isRunning()) {
-                            
-                            newData.setXPos(-1);
-                            newData.setYPos(-1);
-                            board = new int[3][3];      // Initialize a new empty board
+                        // Check if decoded data has -1 for row or col. If so, it's prompting to update GUIs players.
+                        // Check if decoded data has -2 for row or col. If so, it's prompting to clear GUI and disable reset button.
+                        if(decodedData.getXPos() == -2 && decodedData.getYPos() == -2) {
+                            System.out.println("Reset called, clearing board!");
+                            controller.clearBoard();
+                            controller.changeResetButton(true);
+                        } else if(decodedData.getXPos() == -1 && decodedData.getYPos() == -1) {
+                            modifyMe(decodedData);
+                        }
 
-                            if(decodedData.getPlayer1() != null && decodedData.getPlayer2() != null) {
-                                newData.startGame();
-                                newData.setSender(me);
+                        controller.updateStatusLabel(decodedData.getCurrentTurn().getName() + "'s turn!");
 
-                                updatePlayers(decodedData.getPlayer1(), decodedData.getPlayer2());
-                                controller.updateStatusLabel("The game has started! Waiting for opponent to move...");
-                                sendInfo(newData);
+                        // Check if the game is running.
+                        if(decodedData.isRunning()) {
+                            updatePlayers(decodedData);
+                            controller.updateBoardAt(decodedData.getXPos(), decodedData.getYPos(), decodedData.getLastTurn());
 
-                            } else if(me.getID() == 1) {
-                                newData.setPlayer1(me);
-                                newData.setSender(me);
-                                updatePlayers(newData.getPlayer1(), newData.getPlayer2());
-                                sendInfo(newData);
-
-                            } else if(me.getID() == 2) {
-
-                                newData.setPlayer2(me);
-                                newData.setSender(me);
-                                updatePlayers(newData.getPlayer1(), newData.getPlayer2());
-                                sendInfo(newData);
+                            // Display message for stalemate
+                            if(decodedData.seeIfStalemate()) {
+                                controller.updateStatusLabel("Stalemate!");
+                                controller.changeResetButton(false);
                             }
 
-
-                        } else {
-                            
+                            // Display winner.
                             if(decodedData.getWinner() != null) {
+                                controller.updateStatusLabel(decodedData.getWinner().getName() + " won!");
+                                controller.changeBoardLock(true);
+                                controller.changeResetButton(false);
+                            }
 
-                                controller.updateStatusLabel(decodedData.getWinner().getName() + " has won!");
-
-                            } else if(decodedData.seeIfStalemate()) {
-
-                                controller.updateStatusLabel("It's a draw!");
-
-                            // If the associated sender is not my name, then it's my turn. Unlock the board.
-                            } else if(!decodedData.getSender().getName().equals(me.getName())) {
-
-                                // Disregard -1,-1 move value.
-                                if(decodedData.getXPos() != -1 && decodedData.getYPos() != -1) {
-
-                                    controller.updateBoardAt(decodedData.getXPos(), decodedData.getYPos(), decodedData.getSender());
-                                    board[decodedData.getXPos()][decodedData.getYPos()] = decodedData.getSender().getID();      // Update the board locally.
-
-                                }
-                                controller.changeBoardLock(false);
-                                
-                                // If the given sender is the same as the client, it's the other player's turn.
-                                if(decodedData.getSender().getName().equals(decodedData.getPlayer1().getName())) {
-                                    controller.updateStatusLabel(decodedData.getPlayer2().getName() + "! It's your turn.");
-                                } else {
-                                    controller.updateStatusLabel(decodedData.getPlayer1().getName() + "! It's your turn.");
-                                }
+                            // If the current turn is my name, then it's my turn!
+                            if(decodedData.getCurrentTurn().getName().equals(me.getName())){
+                                System.out.println("It's my turn!");
+                                controller.changeBoardLock(false);      // Set disable false.
                             }
                         }
 
@@ -249,27 +203,46 @@ public class Client extends Application {
     }
 
     /**
-     * Update player names within the UI and the client.
+     * Update player names within the UI given a SessionData object.
      * @param player1
      * @param player2
      */
-    private void updatePlayers(PlayerObject player1, PlayerObject player2) {
+    private void updatePlayers(SessionData data) {
 
-        if(player1 != null)
-            this.player1 = player1;
-            controller.SetPlayer1(player1);
+        if(data.getPlayer1() != null)
+            controller.SetPlayer1(data.getPlayer1());
 
-        if(player2 != null)
-            controller.SetPlayer2(player2);
-            this.player2 = player2;
+        if(data.getPlayer2() != null)
+            controller.SetPlayer2(data.getPlayer2());
     }
 
-    public PlayerObject getPlayer1() {
-        return player1;
+    /**
+     * Returns the PlayerObject associated with this client.
+     * @return
+     */
+    public PlayerObject getMe() {
+        return me;
     }
 
-    public PlayerObject getPlayer2() {
-        return player2;
+    /**
+     * Checks what the server assigns ID and pawn to this client.
+     * @param data
+     */
+    public void modifyMe(SessionData data) {
+
+        if(data.getPlayer1().getName() == null || data.getPlayer2().getName() == null)
+            return;
+
+        if(data.getPlayer1().getName().equals(me.getName())){
+            me.setID(data.getPlayer1().getID());
+            me.setPawn(data.getPlayer1().getPawn());
+        }
+        else if(data.getPlayer2().getName().equals(me.getName())){
+            me.setID(data.getPlayer2().getID());
+            me.setPawn(data.getPlayer2().getPawn());
+        }
+
+        System.out.println("I AM " + me.getName() + " WITH ID " + me.getID() + " AND PAWN " + me.getPawn());
     }
     
 }
