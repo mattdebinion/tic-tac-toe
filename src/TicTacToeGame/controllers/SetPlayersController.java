@@ -10,7 +10,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 /**
- * The StartPlayers controller handles actions within the Start Players scene.
+ * The SetPlayers controller handles actions within the Start Players scene.
  * 
  * @author Nika Daroui
  * @author Matt De Binion
@@ -19,29 +19,29 @@ import javafx.stage.Stage;
 public class SetPlayersController {
     
     @FXML
-    Button onePlayerMode, twoPlayerMode, quitButton;
+    Button onlineMode, localMode, quitButton;
     
     /**
-     * PlayerOneMode will start as a Local LAN game.
+     * ONLINE button will start an Online Play game.
      * @param event
      * @throws IOException
      */
-    @FXML public void PlayerOneMode(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("../fxml/SetPlayerOne.fxml"));
-        Stage window = (Stage) onePlayerMode.getScene().getWindow();
+    @FXML public void onlineMode(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("../fxml/OnlinePlay.fxml"));
+        Stage window = (Stage) onlineMode.getScene().getWindow();
         window.setScene(new Scene(root));
     }
 
     /**
-     * PlayerTwoMode will start as a local coop game.
-     * @apiNote AT THE MOMENT, this will launch a local LAN game!
+     * LOCAL will start as a local coop game.
+     * @apiNote THIS IS NOT FUNCTIONING ATM.
      * @param event
      * @throws IOException
      */
-    @FXML public void PlayerTwoMode(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("../fxml/SetPlayerOne.fxml"));
-        Stage window = (Stage) onePlayerMode.getScene().getWindow();
-        window.setScene(new Scene(root));
+    @FXML public void localMode(ActionEvent event) throws IOException {
+        // Parent root = FXMLLoader.load(getClass().getResource("../fxml/SetPlayerOne.fxml"));
+        // Stage window = (Stage) onePlayerMode.getScene().getWindow();
+        // window.setScene(new Scene(root));
     }
 
     /**

@@ -4,9 +4,12 @@ package TicTacToeGame;
 // import java.io.InputStreamReader;
 // import java.net.URL;
 import java.io.ObjectOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -23,18 +26,19 @@ public class Server {
      * @param args Command line arguments.
      */
     public static void main(String[] args) {
-        // String systemIPAddress = "";
 
         try {
-            // // Amazon will return the IP address of this machine when visiting this link.
-            // URL url = new URL("https://checkip.amazonaws.com/");
+            // Amazon will return the IP address of this machine when visiting this link.
+            URL url = new URL("https://checkip.amazonaws.com/");
 
-            // BufferedReader sc = new BufferedReader(new InputStreamReader(url.openStream()));
-            // String systemIPAddress = sc.readLine().trim();
+            BufferedReader sc = new BufferedReader(new InputStreamReader(url.openStream()));
+            String systemIPAddress = sc.readLine().trim();
 
             // Start the server on unassigned port 60.
             ServerSocket serverSocket = new ServerSocket(60);
             Server server = new Server(serverSocket);
+
+            System.out.println("Your IP address is " + systemIPAddress);
 
             server.startServer();
 
@@ -48,6 +52,30 @@ public class Server {
     private final ServerSocket SOCKET;
     private final static DateTimeFormatter SERVER_TIME_FORMAT = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss a");
 
+    /**
+     * Performs the same action as starting from main. Allows a client to start a server on their machine.
+     * <p> This operation is a blocking operation. Run in a thread!
+     */
+    public static void initializeHost() {
+        try {
+            // Amazon will return the IP address of this machine when visiting this link.
+            URL url = new URL("https://checkip.amazonaws.com/");
+
+            BufferedReader sc = new BufferedReader(new InputStreamReader(url.openStream()));
+            String systemIPAddress = sc.readLine().trim();
+
+            // Start the server on unassigned port 60.
+            ServerSocket serverSocket = new ServerSocket(60);
+            Server server = new Server(serverSocket);
+
+            System.out.println("Your IP address is " + systemIPAddress);
+
+            server.startServer();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
     /**
      * Creates a server given a ServerSocket object.
      * @param socket
@@ -95,7 +123,7 @@ public class Server {
 
 
     /**
-     * Closes the server socket.
+     * Closes the server socket. Before calling, ensure you let all players in the game know the game is being terminated.
      * @throws IOException Occurs when you disconnect from the internet.
      */
     public void terminateServer() throws IOException {

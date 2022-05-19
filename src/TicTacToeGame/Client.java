@@ -31,7 +31,7 @@ public class Client extends Application {
 
     // CONNECTION INFORMATION
     private static Socket socket;
-    private static String host = "localhost";              // The host of the session
+    private static String host;              // The host of the session
     private ObjectOutputStream objOut;        // To server
     private ObjectInputStream objIn;          // From server
 
@@ -66,12 +66,14 @@ public class Client extends Application {
      * Connects to the server assuming the server is online.
      * <p>It's best to call this function before the Tic Tac Toe board is loaded.
      * @param boardController
-     * @param me 
+     * @param me
+     * @param IPAddress 
      */
-    public Client(TicTacBoardController gameController, PlayerObject clientInfo) {
+    public Client(TicTacBoardController gameController, PlayerObject clientInfo, String IPAddress) {
 
         controller = gameController;
         me = clientInfo;
+        host = IPAddress;
 
         try {
             socket = new Socket(host, 60);                            // Create a socket to the server
@@ -140,7 +142,7 @@ public class Client extends Application {
         
         new Thread(() -> {
 
-            while(socket.isConnected()) {
+            while(!socket.isClosed()) {
                 try {
                     Object dataReceived = objIn.readUnshared();
 
@@ -156,10 +158,20 @@ public class Client extends Application {
 
                         // Check if decoded data has -1 for row or col. If so, it's prompting to update GUIs players.
                         // Check if decoded data has -2 for row or col. If so, it's prompting to clear GUI and disable reset button.
-                        if(decodedData.getXPos() == -2 && decodedData.getYPos() == -2) {
+                        // Check if decoded data has -3 for row or col. If so, the player has left so reflect that.
+                        if(decodedData.getXPos() == -3 && decodedData.getYPos() == -3) {
+                            controller.updateStatusLabel("Opponent has left.");
+                            controller.clearBoard();
+                            controller.changeResetButton(false);
+                            
+                            disconnect();
+                            break;
+
+                        } else if(decodedData.getXPos() == -2 && decodedData.getYPos() == -2) {
                             System.out.println("Reset called, clearing board!");
                             controller.clearBoard();
                             controller.changeResetButton(true);
+
                         } else if(decodedData.getXPos() == -1 && decodedData.getYPos() == -1) {
                             modifyMe(decodedData);
                         }
