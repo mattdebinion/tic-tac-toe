@@ -19,7 +19,7 @@ import javafx.stage.Stage;
  * 
  * @author Matt De Binion
  */
-public class OnlinePlay {
+public class OnlinePlayController {
 
     @FXML TextField playerName, ipAddress;
     @FXML Button startButton, leaveButton;

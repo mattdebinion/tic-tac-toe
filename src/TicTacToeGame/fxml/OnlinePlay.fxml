@@ -8,41 +8,41 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TicTacToeGame.controllers.OnlinePlay">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TicTacToeGame.controllers.OnlinePlayController">
    <children>
       <Label alignment="CENTER" layoutX="10.0" layoutY="20.0" prefHeight="50.0" prefWidth="580.0" text="Online Play">
          <font>
             <Font size="32.0" />
          </font>
       </Label>
-      <TextField fx:id="playerName" layoutX="188.0" layoutY="106.0">
+      <TextField fx:id="playerName" layoutX="189.0" layoutY="120.0">
          <font>
             <Font size="18.0" />
          </font>
       </TextField>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="9.0" layoutY="71.0" prefHeight="35.0" prefWidth="580.0" text="Enter Name" textAlignment="CENTER">
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="85.0" prefHeight="35.0" prefWidth="580.0" text="Enter Name" textAlignment="CENTER">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <Separator layoutX="10.0" layoutY="153.0" prefHeight="3.0" prefWidth="580.0" />
+      <Separator layoutX="11.0" layoutY="177.0" prefHeight="3.0" prefWidth="580.0" />
       <Separator layoutX="10.0" layoutY="68.0" prefHeight="3.0" prefWidth="580.0" />
-      <TextField fx:id="ipAddress" layoutX="188.0" layoutY="216.0">
+      <TextField fx:id="ipAddress" layoutX="189.0" layoutY="241.0">
          <font>
             <Font size="18.0" />
          </font>
       </TextField>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="147.0" layoutY="156.0" prefHeight="60.0" prefWidth="300.0" text="Enter IP Address" textAlignment="CENTER">
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="147.0" layoutY="181.0" prefHeight="60.0" prefWidth="300.0" text="Enter IP Address" textAlignment="CENTER">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="150.0" layoutY="256.0" prefHeight="100.0" prefWidth="300.0" text="OR" textAlignment="CENTER">
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="150.0" layoutY="281.0" prefHeight="75.0" prefWidth="300.0" text="OR" textAlignment="CENTER">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <CheckBox fx:id="isHosting" alignment="CENTER" contentDisplay="CENTER" layoutX="188.0" layoutY="356.0" onAction="#setToHost" mnemonicParsing="false" prefHeight="60.0" prefWidth="223.0" text="Host Game" textAlignment="CENTER">
+      <CheckBox fx:id="isHosting" alignment="CENTER" contentDisplay="CENTER" layoutX="188.0" layoutY="356.0" mnemonicParsing="false" onAction="#setToHost" prefHeight="60.0" prefWidth="223.0" text="Host Game" textAlignment="CENTER">
          <font>
             <Font size="24.0" />
          </font>
@@ -59,12 +59,12 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Button fx:id="startButton" contentDisplay="CENTER" layoutX="189.0" layoutY="478.0" onAction="#connect" mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0" text="Start!">
+      <Button fx:id="startButton" contentDisplay="CENTER" layoutX="189.0" layoutY="478.0" mnemonicParsing="false" onAction="#connect" prefHeight="40.0" prefWidth="100.0" text="Start!">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button fx:id="leaveButton" contentDisplay="CENTER" layoutX="312.0" layoutY="478.0" onAction="#leave" mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0" text="Leave">
+      <Button fx:id="leaveButton" contentDisplay="CENTER" layoutX="312.0" layoutY="478.0" mnemonicParsing="false" onAction="#leave" prefHeight="40.0" prefWidth="100.0" text="Leave">
          <font>
             <Font size="18.0" />
          </font>

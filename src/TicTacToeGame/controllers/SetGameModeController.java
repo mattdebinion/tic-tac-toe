@@ -16,7 +16,7 @@ import javafx.stage.Stage;
  * @author Matt De Binion
  * @author Elihas Temori
  */
-public class SetPlayersController {
+public class SetGameModeController {
     
     @FXML
     Button onlineMode, localMode, quitButton;
@@ -39,9 +39,9 @@ public class SetPlayersController {
      * @throws IOException
      */
     @FXML public void localMode(ActionEvent event) throws IOException {
-        // Parent root = FXMLLoader.load(getClass().getResource("../fxml/SetPlayerOne.fxml"));
-        // Stage window = (Stage) onePlayerMode.getScene().getWindow();
-        // window.setScene(new Scene(root));
+        Parent root = FXMLLoader.load(getClass().getResource("../fxml/LocalPlay.fxml"));
+        Stage window = (Stage) localMode.getScene().getWindow();
+        window.setScene(new Scene(root));
     }
 
     /**
@@ -50,7 +50,8 @@ public class SetPlayersController {
      * @throws IOException
      */
     @FXML public void logout(ActionEvent event) throws IOException {
-        Stage window = (Stage) quitButton.getScene().getWindow();
-        window.close();
+        Parent root = FXMLLoader.load(getClass().getResource("../fxml/StartMenuGUI.fxml"));
+        Stage window = (Stage) localMode.getScene().getWindow();
+        window.setScene(new Scene(root));
     }
 }
