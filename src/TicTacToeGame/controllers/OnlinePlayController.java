@@ -3,6 +3,7 @@ package TicTacToeGame.controllers;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,6 +27,13 @@ public class OnlinePlayController {
     @FXML Label connectionStatus;
     @FXML CheckBox isHosting;
 
+    @FXML public void initialize() {
+        startButton.disableProperty().bind(
+            Bindings.createBooleanBinding(() -> ipAddress.getText().trim().isEmpty(), ipAddress.textProperty())
+            .or(Bindings.createBooleanBinding(() -> playerName.getText().trim().isEmpty(), playerName.textProperty()))
+        );
+    }
+
     /**
      * Attempts to establish a connection if one can be made.
      * @param event
@@ -34,9 +42,6 @@ public class OnlinePlayController {
      */
     @FXML public void connect(ActionEvent event) throws IOException, InterruptedException {
 
-        // Lock buttons while attempting connection.
-        startButton.setDisable(true);
-        leaveButton.setDisable(true);
         connectionStatus.setText("Connecting, please wait...");
 
 
@@ -54,8 +59,7 @@ public class OnlinePlayController {
             window.setScene(new Scene(root));
         } catch (Exception e) {
             connectionStatus.setText("Connection failed.");
-            startButton.setDisable(false);
-            leaveButton.setDisable(false);
+            ipAddress.setText("");
         }
 
     }
@@ -68,9 +72,12 @@ public class OnlinePlayController {
     @FXML public void setToHost(ActionEvent event) {
 
         if(isHosting.isSelected()) {
-            ipAddress.setText("");
+            ipAddress.setText("localhost");
+            ipAddress.setStyle("-fx-text-fill: white");
             ipAddress.setDisable(true);
         } else {
+            ipAddress.setText("");
+            ipAddress.setStyle("-fx-text-fill: black");
             ipAddress.setDisable(false);
         }
     }

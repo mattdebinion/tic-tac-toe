@@ -3,6 +3,7 @@ package TicTacToeGame.controllers;
 import java.io.IOException;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +19,16 @@ public class LocalPlayController {
     @FXML TextField player1name, player2name;
     @FXML CheckBox isAI;
     @FXML Button startButton, leaveButton;
+
+    /**
+     * Initializes the controller class.
+     */
+    @FXML public void initialize() {
+        startButton.disableProperty().bind(
+            Bindings.createBooleanBinding(() -> player1name.getText().trim().isEmpty(), player1name.textProperty())
+            .or(Bindings.createBooleanBinding(() -> player2name.getText().trim().isEmpty(), player2name.textProperty()))
+        );
+    }
 
     /**
      * Starts a game locally.
