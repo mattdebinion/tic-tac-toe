@@ -258,9 +258,9 @@ public class GameHandler implements Runnable {
         dataToReturn.setPlayer2(player2Object);
 
         // If a session data object is passed with -1, -2, or -3 X and Y positions.
-        if(dataToReturn.getXPos() == -1 || dataToReturn.getYPos() == -1 
-        && dataToReturn.getXPos() == -2 || dataToReturn.getYPos() == -2
-        && dataToReturn.getXPos() == -3 || dataToReturn.getYPos() == -3) {
+        if(dataToReturn.getXPos() == -1 && dataToReturn.getYPos() == -1 
+        || dataToReturn.getXPos() == -2 && dataToReturn.getYPos() == -2
+        || dataToReturn.getXPos() == -3 && dataToReturn.getYPos() == -3) {
 
             System.out.println("IGNORE SESSION DATA");
             return dataToReturn;
