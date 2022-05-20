@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import TicTacToeGame.Client;
 import TicTacToeGame.PlayerObject;
+import TicTacToeGame.Server;
 import TicTacToeGame.exceptions.InvalidMoveException;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -29,34 +30,59 @@ public class TicTacBoardController {
     
     static Client associatedClient;
 
-    @FXML
-    public void initialize() throws IOException {
+    @FXML public void initialize() throws IOException, InterruptedException {
 
         BufferedReader br = new BufferedReader(new FileReader("./src/TicTacToeGame/PLAYERDATA.txt"));
-            try {
-                StringBuilder sb = new StringBuilder();
-                String line = br.readLine();
+        try {
+            StringBuilder sb1 = new StringBuilder();
+            StringBuilder sb2 = new StringBuilder();
 
-                while (line != null) {
-                    sb.append(line);
-                    line = br.readLine();
+            String getName = br.readLine();
+            sb1.append(getName);
+            String getIP = br.readLine();
+            sb2.append(getIP);
+
+            String name = getName.toString();
+            String IPaddress = getIP.toString();
+
+            // initializeHost is a blocking operation.
+            Thread serverThread = new Thread(() -> {
+                Server.initializeHost();
+            });
+
+            serverThread.start();
+
+            // Sleep the current GUI thread for 3 second to allow the server to start.
+            Thread.sleep(3000);
+
+            System.out.println("Connecting to " + IPaddress + " with nickname " + name);
+            associatedClient = new Client(this, new PlayerObject(name, true), IPaddress);
+            
+            PlayerDisplay1.setText("Player 1: ...");
+            PlayerDisplay2.setText("Player 2: ...");
+            changeBoardLock(true);
+            updateStatusLabel("Waiting for player 2...");
+
+        } finally {
+            br.close();
+
+            File file = new File("./src/TicTacToeGame/PLAYERDATA.txt");
+            file.delete();
+        }
+        
+        // Handle case when user X out the window instead of pressing quit. Add this to runLater as it should be
+        // added once stage is initalized.
+        Platform.runLater(() -> {
+            Stage stage = (Stage) GameBoard.getScene().getWindow();
+            stage.setOnCloseRequest(arg -> {
+                try {
+                    arg.consume();
+                    logout();
+                } catch (Exception e) {
+                    System.out.println("Unable to handle logout." + e.getMessage());
                 }
-                String name = sb.toString();
-
-                System.out.println("Connecting to server as " + name);
-                associatedClient = new Client(this, new PlayerObject(name, true));
-                
-                PlayerDisplay1.setText("Player 1: ...");
-                PlayerDisplay2.setText("Player 2: ...");
-                changeBoardLock(true);
-                updateStatusLabel("Waiting for player 2...");
-
-            } finally {
-                br.close();
-
-                File file = new File("./src/TicTacToeGame/PLAYERDATA.txt");
-                file.delete();
-            }
+            });
+        });
     }
 
     /**
@@ -90,9 +116,17 @@ public class TicTacBoardController {
      * End the game and go to main menu.
      * @param event
      * @throws IOException
+     * @throws InvalidMoveException
      */
-    @FXML public void goToMainMenu(ActionEvent event) throws IOException {
-        Client.disconnect();
+    @FXML public void goToMainMenu(ActionEvent event) throws IOException, InvalidMoveException {
+
+        try {
+            associatedClient.sendMove(-3, -3); // Send a -3,-3 move that the sending player has left.
+            Client.disconnect();                // Disconnect.
+        } catch (Exception e) {
+            System.out.println("Not connected.");
+        }
+        
         Parent root = FXMLLoader.load(getClass().getResource("../fxml/StartMenuGUI.fxml"));
         Stage window = (Stage) menuBtn2.getScene().getWindow();
         window.setScene(new Scene(root));
@@ -108,15 +142,30 @@ public class TicTacBoardController {
         
         restartBtn2.setDisable(true);
         clearBoard();
-        associatedClient.sendMove(-2, -2);
+        associatedClient.sendMove(-2, -2); // Send a -2,-2 move that the sending player wants to restart the game.
     }
 
     /**
-     * Logout of the game.
+     * Completely leave the game.
      * @param event
      * @throws IOException
+     * @throws InvalidMoveException
      */
-    @FXML public void logout(ActionEvent event) throws IOException {
+    @FXML public void logout(ActionEvent event) throws IOException, InvalidMoveException {
+        associatedClient.sendMove(-3, -3); // Send a -3,-3 move that the sending player has left.
+        Client.disconnect();                // Disconnect.
+        Stage window = (Stage) quitGame.getScene().getWindow();
+        window.close();
+    }
+
+    /**
+     * Completely leave the game.
+     * @throws IOException
+     * @throws InvalidMoveException
+     */
+    private void logout() throws InvalidMoveException, IOException {
+        associatedClient.sendMove(-3, -3); // Send a -3,-3 move that the sending player has left.
+        Client.disconnect();                // Disconnect.
         Stage window = (Stage) quitGame.getScene().getWindow();
         window.close();
     }

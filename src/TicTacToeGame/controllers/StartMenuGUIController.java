@@ -19,17 +19,17 @@ import javafx.stage.Stage;
 public class StartMenuGUIController {
     
     @FXML
-    Button localGame, creditButton, quitButton;
+    Button playGame, creditButton, quitButton;
     
     @FXML public void SetGameMode(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("../fxml/SetPlayers.fxml"));
-        Stage window = (Stage) localGame.getScene().getWindow();
+        Parent root = FXMLLoader.load(getClass().getResource("../fxml/SetGameMode.fxml"));
+        Stage window = (Stage) playGame.getScene().getWindow();
         window.setScene(new Scene(root));
     }
 
     @FXML public void switchToCredits(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("../fxml/Credits.fxml"));
-        Stage window = (Stage) localGame.getScene().getWindow();
+        Stage window = (Stage) playGame.getScene().getWindow();
         window.setScene(new Scene(root));
     }
 
