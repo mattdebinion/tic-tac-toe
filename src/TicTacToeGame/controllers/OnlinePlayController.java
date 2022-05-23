@@ -44,7 +44,6 @@ public class OnlinePlayController {
 
         connectionStatus.setText("Connecting, please wait...");
 
-
         // Write player name to a temporary file as I cannot figure out how to pass data to other controllers within code.
         PrintWriter out = new PrintWriter("./src/TicTacToeGame/PLAYERDATA.txt");
         out.println(playerName.getText());      // Write player name to line 1   

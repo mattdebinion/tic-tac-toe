@@ -1,7 +1,7 @@
 package TicTacToeGame.controllers;
 
 import java.io.IOException;
-
+import java.io.PrintWriter;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
@@ -14,11 +14,17 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+
 public class LocalPlayController {
     
     @FXML TextField player1name, player2name;
     @FXML CheckBox isAI;
     @FXML Button startButton, leaveButton;
+
+    static boolean onePlayerGame = false;
+    static String aiName;
+    static String p1Name;
+    static String p2Name;
 
     /**
      * Initializes the controller class.
@@ -36,10 +42,34 @@ public class LocalPlayController {
      * @param event
      * @throws IOException
      */
-    @FXML public void start(ActionEvent event) throws IOException {
-        // Parent root = FXMLLoader.load(getClass().getResource("../fxml/TicTacGUI.fxml"));
-        // Stage window = (Stage) startButton.getScene().getWindow();
-        // window.setScene(new Scene(root));
+    @FXML public void startLocalGame(ActionEvent event) throws IOException {
+
+        // Write player name to a temporary file as I cannot figure out how to pass data to other controllers within code.
+        PrintWriter out = new PrintWriter("./src/TicTacToeGame/PLAYERDATA.txt");
+        out.println(player1name.getText());      // Write player name to line 1
+        out.println();       // Write IP address to line 2. (If hosting, this line will be blank).
+        out.close();
+
+        // Attempt to load the next scene. The scene will not load if the connection cannot be made.
+        try {
+            if(isAI.isSelected()) {
+                onePlayerGame = true;
+                aiName = player2name.getText();
+                Parent root = FXMLLoader.load(getClass().getResource("../fxml/TicTacGUI.fxml"));
+                Stage window = (Stage) startButton.getScene().getWindow();
+                window.setScene(new Scene(root));
+            }
+            else {
+                p1Name = player1name.getText();
+                p2Name = player2name.getText();
+                Parent root = FXMLLoader.load(getClass().getResource("../fxml/LocalTicTacGUI.fxml"));
+                Stage window = (Stage) startButton.getScene().getWindow();
+                window.setScene(new Scene(root));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -69,5 +99,21 @@ public class LocalPlayController {
         Parent root = FXMLLoader.load(getClass().getResource("../fxml/StartMenuGUI.fxml"));
         Stage window = (Stage) startButton.getScene().getWindow();
         window.setScene(new Scene(root));
+    }
+
+    public static boolean isOnePlayerGame() {
+        return onePlayerGame;
+    }
+
+    public static String getAiName() {
+        return aiName;
+    }
+
+    public static String getP1Name() {
+        return p1Name;
+    }
+
+    public static String getP2name() {
+        return p2Name;
     }
 }

@@ -108,7 +108,7 @@ public class SessionData implements Serializable {
 
     /**
      * Sets Player1 in the game.
-     * @param player1
+     * @param player
      */
     public void setPlayer1(PlayerObject player) {
         this.player1 = player;
@@ -116,7 +116,7 @@ public class SessionData implements Serializable {
 
     /**
      * Sets Player2 in the game.
-     * @param player2
+     * @param player
      */
     public void setPlayer2(PlayerObject player) {
         this.player2 = player;

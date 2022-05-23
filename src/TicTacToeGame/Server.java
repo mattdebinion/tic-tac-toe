@@ -47,8 +47,6 @@ public class Server {
         }
     }
 
-
-
     private final ServerSocket SOCKET;
     private final static DateTimeFormatter SERVER_TIME_FORMAT = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss a");
 
@@ -83,7 +81,6 @@ public class Server {
     public Server(ServerSocket socket) {
         SOCKET = socket;
     }
-
 
     /**
      * Spawns a new thread with two connected clients to play games.
@@ -120,7 +117,6 @@ public class Server {
             System.out.println(getMachineTime() + e.getMessage());
         }
     }
-
 
     /**
      * Closes the server socket. Before calling, ensure you let all players in the game know the game is being terminated.

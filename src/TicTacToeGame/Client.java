@@ -35,13 +35,10 @@ public class Client extends Application {
     private ObjectOutputStream objOut;        // To server
     private ObjectInputStream objIn;          // From server
 
-
     // GUI INTERACTION INFORMATION
     private TicTacBoardController controller;
     private Scene scene;
 
-
-    
     /**
      * Starts a new client and launches the GUI to interact with the game.
      */
@@ -65,8 +62,8 @@ public class Client extends Application {
     /**
      * Connects to the server assuming the server is online.
      * <p>It's best to call this function before the Tic Tac Toe board is loaded.
-     * @param boardController
-     * @param me
+     * @param gameController
+     * @param clientInfo
      * @param IPAddress 
      */
     public Client(TicTacBoardController gameController, PlayerObject clientInfo, String IPAddress) {
@@ -132,8 +129,6 @@ public class Client extends Application {
         controller.updateBoardAt(row, col, me);
     }
 
-
-    
     /**
      * Listens to broadcasted messages from the input stream as long as the {@linkplain Socket} is connected.
      * <p>Before invoking the {@code listen()} function, the {@code connect()} function must be called.
@@ -176,7 +171,9 @@ public class Client extends Application {
                             modifyMe(decodedData);
                         }
 
-                        controller.updateStatusLabel(decodedData.getCurrentTurn().getName() + "'s turn!");
+                        if(decodedData.getCurrentTurn() != null) {
+                            controller.updateStatusLabel(decodedData.getCurrentTurn().getName() + "'s turn!");
+                        }
 
                         // Check if the game is running.
                         if(decodedData.isRunning()) {
@@ -216,8 +213,7 @@ public class Client extends Application {
 
     /**
      * Update player names within the UI given a SessionData object.
-     * @param player1
-     * @param player2
+     * @param data
      */
     private void updatePlayers(SessionData data) {
 
