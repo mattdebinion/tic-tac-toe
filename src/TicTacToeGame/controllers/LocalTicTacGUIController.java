@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -32,6 +33,8 @@ public class LocalTicTacGUIController implements Initializable {
     char[][] boardState;
     int squaresFilled = 0;
     char currentPawn;
+    boolean boolean_rand;
+    Random random = new Random();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -45,16 +48,21 @@ public class LocalTicTacGUIController implements Initializable {
 
         setPlayers(LocalPlayController.getP1Name(), LocalPlayController.getP2name());
 
-        boolean boolean_rand = ThreadLocalRandom.current().nextBoolean();
+        randomPlayerPicker();
 
-        if(boolean_rand) {
-            gameStatus.setText(p1.getName() + " goes first!");
-            currentPawn = 'X';
-        }
-        else {
-            gameStatus.setText(p2.getName() + " goes first!");
-            currentPawn = 'O';
-        }
+        // Handle case when user X out the window instead of pressing quit. Add this to runLater as it should be
+        // added once stage is initalized.
+        Platform.runLater(() -> {
+            Stage stage = (Stage) GameBoard.getScene().getWindow();
+            stage.setOnCloseRequest(arg -> {
+                try {
+                    Platform.exit();
+                    System.exit(0);
+                } catch (Exception e) {
+                    System.out.println("Unable to handle logout." + e.getMessage());
+                }
+            });
+        });
 
     }
 
@@ -105,8 +113,10 @@ public class LocalTicTacGUIController implements Initializable {
             }
             restartBtn2.setDisable(false);
         }
-        if(MiniMax.checkCharBoardForStalemate(boardState))
+        else if(MiniMax.checkCharBoardForStalemate(boardState)) {
             gameStatus.setText("IT'S A STALEMATE!");
+            restartBtn2.setDisable(false);
+        }
     }
 
     /**
@@ -171,8 +181,21 @@ public class LocalTicTacGUIController implements Initializable {
         square33.setText("");
 
         restartBtn2.setDisable(true);
-        gameStatus.setText("'X' goes first!");
-        currentPawn = p1.getPawn();
+        randomPlayerPicker();
         changeBoardLock(false);
+    }
+
+    private void randomPlayerPicker() {
+
+        boolean_rand = random.nextBoolean();
+
+        if(boolean_rand) {
+            gameStatus.setText(p1.getName() + " goes first!");
+            currentPawn = 'X';
+        }
+        else {
+            gameStatus.setText(p2.getName() + " goes first!");
+            currentPawn = 'O';
+        }
     }
 }

@@ -1,6 +1,8 @@
 package TicTacToeGame.controllers;
 
 import java.io.IOException;
+
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +19,22 @@ import javafx.stage.Stage;
  * @author Elihas Temori
  */
 public class StartMenuGUIController {
+
+    @FXML private void initialize() {
+        // Handle case when user X out the window instead of pressing quit. Add this to runLater as it should be
+        // added once stage is initalized.
+        Platform.runLater(() -> {
+            Stage stage = (Stage) playGame.getScene().getWindow();
+            stage.setOnCloseRequest(arg -> {
+                try {
+                    Platform.exit();
+                    System.exit(0);
+                } catch (Exception e) {
+                    System.out.println("Unable to handle logout." + e.getMessage());
+                }
+            });
+        });
+    }
     
     @FXML
     Button playGame, creditButton, quitButton;
