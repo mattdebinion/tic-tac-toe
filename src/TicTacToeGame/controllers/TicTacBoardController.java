@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import TicTacToeGame.AIPlayer;
 import TicTacToeGame.Client;
 import TicTacToeGame.PlayerObject;
 import TicTacToeGame.Server;
@@ -27,6 +28,8 @@ public class TicTacBoardController {
     @FXML Label PlayerDisplay1, PlayerDisplay2, gameStatus;
     @FXML Button menuBtn2, restartBtn2, quitGame, square11, square12, square13, square21, square22, square23, square31, square32, square33;
     @FXML GridPane GameBoard;
+    boolean aiGame = false;
+    String aiName;
     
     static Client associatedClient;
 
@@ -62,6 +65,10 @@ public class TicTacBoardController {
             PlayerDisplay2.setText("Player 2: ...");
             changeBoardLock(true);
             updateStatusLabel("Waiting for player 2...");
+
+            if(LocalPlayController.isOnePlayerGame()) {
+                AIPlayer ai = new AIPlayer(LocalPlayController.getAiName());
+            }
 
         } finally {
             br.close();
@@ -109,7 +116,7 @@ public class TicTacBoardController {
 
         associatedClient.sendMove(xCoord, yCoord);
         updateBoardAt(xCoord, yCoord, associatedClient.getMe());
-        //updateStatusLabel("Waiting for opponent to move...");
+
     }
 
     /**
@@ -180,16 +187,17 @@ public class TicTacBoardController {
 
         if(x < 0 || y < 0 || x > 2 || y > 2)
             return;
-        
-        Platform.runLater(() -> {
-            Font f = Font.font("Bookman Old Style", FontWeight.EXTRA_BOLD, 64);
-            String btn = "square" + (x + 1) + (y + 1);
-            Button squareButton = (Button) GameBoard.lookup("#" + btn);
-            squareButton.setFont(f);
-            squareButton.setStyle("-fx-text-fill: red");
-            squareButton.setText(Character.toString(player.getPawn()));
-            squareButton.setDisable(true);
-        });
+        if(player != null) {
+            Platform.runLater(() -> {
+                Font f = Font.font("Bookman Old Style", FontWeight.EXTRA_BOLD, 64);
+                String btn = "square" + (x + 1) + (y + 1);
+                Button squareButton = (Button) GameBoard.lookup("#" + btn);
+                squareButton.setFont(f);
+                squareButton.setStyle("-fx-text-fill: red");
+                squareButton.setText(Character.toString(player.getPawn()));
+                squareButton.setDisable(true);
+            });
+        }
     }
 
     /**
