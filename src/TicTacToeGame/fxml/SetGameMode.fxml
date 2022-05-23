@@ -2,18 +2,19 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="startMenu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TicTacToeGame.controllers.SetGameModeController">
+<AnchorPane fx:id="startMenu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="600.0" stylesheets="@../stylesheets/style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TicTacToeGame.controllers.SetGameModeController">
     <Label layoutX="100.0" layoutY="79.0" text="T">
         <font>
             <Font name="American Typewriter" size="96.0" />
         </font>
     </Label>
-    <VBox alignment="CENTER" layoutX="-1.0" layoutY="13.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="654" prefWidth="600" />
+    <VBox alignment="CENTER" layoutX="-1.0" layoutY="-2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="654" prefWidth="600" />
     <Label layoutX="6.0" layoutY="637.0">
         <font>
             <Font name="American Typewriter" size="34.0" />
@@ -63,24 +64,27 @@
         </font>
     </Label>
 
-            <Button fx:id="localMode" layoutX="4.0" layoutY="557.0" onAction="#onlineMode" prefHeight="52.0" prefWidth="200.0" stylesheets="@../stylesheets/style.css" text="ONLINE">
+                  <Button fx:id="localMode" layoutX="25.0" layoutY="560.0" onAction="#onlineMode" prefHeight="50.0" prefWidth="180.0" stylesheets="@../stylesheets/style.css" text="ONLINE">
       <font>
          <Font name="American Typewriter" size="25.0" />
       </font>
    </Button>
-    <Button fx:id="onlineMode" layoutX="202.0" layoutY="557.0" onAction="#localMode" prefHeight="52.0" prefWidth="200.0" stylesheets="@../stylesheets/style.css" text="LOCAL">
+    <Button fx:id="quitButton" layoutX="399.0" layoutY="560.0" onAction="#logout" prefHeight="40.0" prefWidth="180.0" stylesheets="@../stylesheets/style.css" text="GO BACK">
       <font>
          <Font name="American Typewriter" size="25.0" />
       </font>
    </Button>
-    <Button fx:id="quitButton" layoutX="399.0" layoutY="557.0" onAction="#logout" prefHeight="52.0" prefWidth="180.0" stylesheets="@../stylesheets/style.css" text="QUIT">
-      <font>
-         <Font name="American Typewriter" size="25.0" />
-      </font></Button>
 
     <Label layoutX="130.0" layoutY="14.0" text="WELCOME TO" textFill="#457fd1">
         <font>
             <Font name="American Typewriter" size="53.0" />
         </font>
     </Label>
+   <Separator layoutX="10.0" layoutY="550.0" prefHeight="16.0" prefWidth="580.0" />
+   <Separator layoutX="10.0" layoutY="608.0" prefHeight="16.0" prefWidth="580.0" />
+    <Button fx:id="onlineMode" layoutX="213.0" layoutY="560.0" onAction="#localMode" prefHeight="52.0" prefWidth="180.0" stylesheets="@../stylesheets/style.css" text="LOCAL">
+      <font>
+         <Font name="American Typewriter" size="25.0" />
+      </font>
+   </Button>
 </AnchorPane>

@@ -4,3 +4,9 @@
     -fx-background-insets: -2, -0.3, 1, 2;
     -fx-background-radius: 7, 6, 4, 3;
 }
+
+.button:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.1);
+    -fx-background-insets: -2, -0.3, 1, 2;
+    -fx-background-radius: 7, 6, 4, 3;
+}
