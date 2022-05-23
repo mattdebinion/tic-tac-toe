@@ -32,6 +32,8 @@ public class OnlinePlayController {
             Bindings.createBooleanBinding(() -> ipAddress.getText().trim().isEmpty(), ipAddress.textProperty())
             .or(Bindings.createBooleanBinding(() -> playerName.getText().trim().isEmpty(), playerName.textProperty()))
         );
+
+        LocalPlayController.onePlayerGame = false;
     }
 
     /**
