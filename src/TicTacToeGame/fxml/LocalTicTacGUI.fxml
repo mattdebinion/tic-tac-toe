@@ -35,7 +35,7 @@
     <Line endX="471.5" endY="500.0" layoutX="-73.0" layoutY="39.0" startX="471.5" startY="42.0" strokeWidth="5.0" />
     <Line endX="553.5" endY="227.79290771484375" layoutX="-3.0" layoutY="3.0" startX="33.5" startY="227.79290771484375" strokeMiterLimit="20.0" strokeWidth="5.0" />
     <Line endX="538.5" endY="427.0" layoutX="9.0" layoutY="-31.0" startX="24.5" startY="427.0" strokeWidth="5.0" />
-    <GridPane fx:id="GameBoard" alignment="CENTER" layoutX="5.0" layoutY="14.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="604.0" prefWidth="591.0">
+    <GridPane fx:id="GameBoard" alignment="CENTER" layoutX="5.0" layoutY="11.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="604.0" prefWidth="591.0">
         <Button fx:id="square11" alignment="CENTER" contentDisplay="CENTER" defaultButton="true" onAction="#checkCurrentButton" prefHeight="201.0" prefWidth="180.0" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-border-color: none;" styleClass="IDLE_BUTTON" stylesheets="@../stylesheets/style.css" text="" />
         <Button fx:id="square12" alignment="CENTER" onAction="#checkCurrentButton" prefHeight="139.0" prefWidth="191.0" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-border-color: none;" stylesheets="@../stylesheets/style.css" text="" GridPane.columnIndex="1" />
         <Button fx:id="square13" alignment="CENTER" onAction="#checkCurrentButton" prefHeight="196.0" prefWidth="155.0" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-border-color: none;" stylesheets="@../stylesheets/style.css" text="" GridPane.columnIndex="2" />
@@ -56,12 +56,22 @@
             <RowConstraints maxHeight="400.0" minHeight="103.0" prefHeight="146.0" />
         </rowConstraints>
     </GridPane>
-    <Label fx:id="gameStatus" layoutX="106.0" layoutY="561.0" prefHeight="26.0" prefWidth="426.0" text="CLICK ANY SQUARE TO START GAME">
+    <Label fx:id="gameStatus" alignment="CENTER" contentDisplay="CENTER" layoutX="103.0" layoutY="51.0" prefHeight="26.0" prefWidth="426.0" text="CLICK ANY SQUARE TO START GAME">
         <font>
             <Font name="American Typewriter" size="21.0" />
         </font>
     </Label>
-    <Label fx:id="PlayerDisplay2" layoutX="381.0" layoutY="12.0" prefHeight="26.0" prefWidth="213.0" text="Player Two:" textFill="#457fd1">
+    <Label fx:id="PlayerDisplay2" layoutX="13.0" layoutY="561.0" prefHeight="26.0" prefWidth="213.0" text="Player Two:" textFill="#457fd1">
+        <font>
+            <Font name="American Typewriter" size="16.0" />
+        </font>
+    </Label>
+    <Label fx:id="PlayerScoreDisplay2" layoutX="446.0" layoutY="555.0" prefHeight="39.0" prefWidth="267.0" text="Score:" textFill="#457fd1">
+        <font>
+            <Font name="American Typewriter" size="16.0" />
+        </font>
+    </Label>
+    <Label fx:id="PlayerScoreDisplay1" layoutX="446.0" layoutY="2.0" prefHeight="39.0" prefWidth="267.0" text="Score:" textFill="#457fd1">
         <font>
             <Font name="American Typewriter" size="16.0" />
         </font>
