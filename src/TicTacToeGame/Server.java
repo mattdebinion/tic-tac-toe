@@ -47,7 +47,7 @@ public class Server {
         }
     }
 
-    private final ServerSocket SOCKET;
+    private static ServerSocket SOCKET;
     private final static DateTimeFormatter SERVER_TIME_FORMAT = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss a");
 
     /**
@@ -122,9 +122,9 @@ public class Server {
      * Closes the server socket. Before calling, ensure you let all players in the game know the game is being terminated.
      * @throws IOException Occurs when you disconnect from the internet.
      */
-    public void terminateServer() throws IOException {
+    public static void terminateServer() throws IOException {
         SOCKET.close();
-        System.out.println(getMachineTime() + "Server terminated!");
+        System.out.println("Server terminated!");
     }
 
     private String getMachineTime() {

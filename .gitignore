@@ -4,6 +4,7 @@
 .idea
 out
 *.iml
+src/TicTacToeGame/PLAYERDATA.txt
 
 # Compiled class file
 *.class

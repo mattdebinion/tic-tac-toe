@@ -85,6 +85,8 @@ public class TicTacBoardController {
                 try {
                     arg.consume();
                     logout();
+                    Platform.exit();
+                    System.exit(0);
                 } catch (Exception e) {
                     System.out.println("Unable to handle logout." + e.getMessage());
                 }
