@@ -223,6 +223,18 @@ public class TicTacBoardController {
 
     }
 
+    public void updateScore1(int score) {
+        Platform.runLater(() -> {
+            PlayerScoreDisplay1.setText("Score: " + score);
+        });
+    }
+
+    public void updateScore2(int score){
+            Platform.runLater(() -> {
+                PlayerScoreDisplay2.setText("Score: " + score);
+            });
+    }
+
 
     /**
      * Updates the board lock, unlocks squares that are empty.
@@ -257,7 +269,7 @@ public class TicTacBoardController {
 
             if(player != null)
                 PlayerDisplay1.setText("Player 1: " + player.getName() + " (" + player.getPawn() + ")");
-
+                PlayerScoreDisplay1.setText("Score: 0");
         });
     }
 
@@ -266,7 +278,10 @@ public class TicTacBoardController {
 
             if(player != null)
                 PlayerDisplay2.setText("Player 2: " + player.getName() + " (" + player.getPawn() + ")");
+                PlayerScoreDisplay1.setText("Score: 0");
+
                 
         });
     }
+
 }

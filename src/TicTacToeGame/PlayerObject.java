@@ -19,7 +19,7 @@ public class PlayerObject implements Serializable {
     private boolean isAI = false;   // Flag to determine if Controller should handle this PlayerObject as an AI player.
     private char pawn;              // The character representing the player's pawn.
     private int playerID;           // THe player ID
-    private int totalScore;         // total score for the session for the player
+    private int totalScore = 0;         // total score for the session for the player
     private InetAddress playerIP;   // The local IP address of this player.
 
     /**
@@ -76,8 +76,8 @@ public class PlayerObject implements Serializable {
         return playerID;
     }
 
-    public void setScore(int score){
-       totalScore =+ score;
+    public void setScore(){
+       totalScore =+1;
     }
 
     public int getScore(){
