@@ -1,10 +1,5 @@
 package TicTacToeGame;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
-
 import TicTacToeGame.controllers.TicTacBoardController;
 import TicTacToeGame.exceptions.InvalidMoveException;
 import javafx.application.Application;
@@ -13,6 +8,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 
 /**
  * The Client class (an observer).
@@ -39,6 +39,9 @@ public class Client extends Application {
     // GUI INTERACTION INFORMATION
     private TicTacBoardController controller;
     private Scene scene;
+
+    int player1Score = 0;
+    int player2Score = 0;
 
     /**
      * Starts a new client and launches the GUI to interact with the game.
@@ -201,6 +204,15 @@ public class Client extends Application {
                                 controller.updateStatusLabel(decodedData.getWinner().getName() + " won!");
                                 controller.changeBoardLock(true);
                                 controller.changeResetButton(false);
+                                if (decodedData.getWinner().getID() == 1){
+                                    player1Score = player1Score + 1;
+                                    controller.updateScore1(player1Score);
+                                }
+                                else{
+                                    player2Score = player2Score + 1;
+                                    controller.updateScore2(player2Score);
+                                }
+                                System.out.println(decodedData.getWinner().getScore());
                             }
 
                             // If the current turn is my name, then it's my turn!

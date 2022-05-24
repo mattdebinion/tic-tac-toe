@@ -25,7 +25,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class LocalTicTacGUIController implements Initializable {
 
-    @FXML Label PlayerDisplay1, PlayerDisplay2, gameStatus;
+    @FXML Label PlayerDisplay1, PlayerDisplay2, gameStatus, PlayerScoreDisplay1, PlayerScoreDisplay2;
     @FXML Button menuBtn2, restartBtn2, quitGame, square11, square12, square13, square21, square22, square23, square31, square32, square33;
     @FXML GridPane GameBoard;
     PlayerObject p1;
@@ -45,6 +45,9 @@ public class LocalTicTacGUIController implements Initializable {
                 boardState[i][j] = ' ';
             }
         }
+
+        PlayerScoreDisplay1.setText("SCORE: 0");
+        PlayerScoreDisplay2.setText("SCORE: 0");
 
         setPlayers(LocalPlayController.getP1Name(), LocalPlayController.getP2name());
 
@@ -107,9 +110,14 @@ public class LocalTicTacGUIController implements Initializable {
             changeBoardLock(true);
             if(MiniMax.checkWin(boardState) == p1.getPawn()) {
                 gameStatus.setText(p1.getName() + " HAS WON!");
+                p1.setScore();
+                PlayerScoreDisplay1.setText("SCORE: " + p1.getScore());
             }
             else {
                 gameStatus.setText(p2.getName() + " HAS WON!");
+                p2.setScore();
+                PlayerScoreDisplay2.setText("SCORE: " + p2.getScore());
+
             }
             restartBtn2.setDisable(false);
         }

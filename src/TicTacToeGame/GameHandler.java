@@ -274,6 +274,7 @@ public class GameHandler implements Runnable {
             if(board[0][col] == player.getID() && board[1][col] == player.getID() && board[2][col] == player.getID()) {
                 System.out.println("VERT WIN");
                 dataToReturn.setWinner(player);
+                player.setScore(); // set player score to 1
                 return dataToReturn;
             }
         }
@@ -283,6 +284,7 @@ public class GameHandler implements Runnable {
         for(int row = 0; row < 3; row++) {
             if(board[row][0] == player.getID() && board[row][1] == player.getID() && board[row][2] == player.getID()) {
                 System.out.println("HORIZ WIN");
+                player.setScore(); // set player score to 1
                 dataToReturn.setWinner(player);
                 return dataToReturn;
             }
@@ -292,12 +294,14 @@ public class GameHandler implements Runnable {
         // Check for both diagonal orientations (if 11, 22, 33 OR 31, 22, 13 are the same)
         if(board[0][0] == player.getID() && board[1][1] == player.getID() && board[2][2] == player.getID()) {
             System.out.println("DIAG WIN");
+            player.setScore(); // set player score to 1
             dataToReturn.setWinner(player);
             return dataToReturn;
         }
 
         if(board[0][2] == player.getID() && board[1][1] == player.getID() && board[2][0] == player.getID()) {
             System.out.println("DIAG WIN");
+            player.setScore(); // set player score to 1
             dataToReturn.setWinner(player);
             return dataToReturn;
         }
