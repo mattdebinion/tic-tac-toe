@@ -1,10 +1,5 @@
 package TicTacToeGame.controllers;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-
 import TicTacToeGame.AIPlayer;
 import TicTacToeGame.Client;
 import TicTacToeGame.PlayerObject;
@@ -23,9 +18,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
 public class TicTacBoardController {
     
-    @FXML Label PlayerDisplay1, PlayerDisplay2, gameStatus;
+    @FXML Label PlayerDisplay1, PlayerDisplay2, gameStatus, PlayerScoreDisplay1, PlayerScoreDisplay2;
     @FXML Button menuBtn2, restartBtn2, quitGame, square11, square12, square13, square21, square22, square23, square31, square32, square33;
     @FXML GridPane GameBoard;
     boolean aiGame = false;
@@ -222,6 +222,7 @@ public class TicTacBoardController {
         });
 
     }
+
 
     /**
      * Updates the board lock, unlocks squares that are empty.

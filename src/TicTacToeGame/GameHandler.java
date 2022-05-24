@@ -274,6 +274,7 @@ public class GameHandler implements Runnable {
             if(board[0][col] == player.getID() && board[1][col] == player.getID() && board[2][col] == player.getID()) {
                 System.out.println("VERT WIN");
                 dataToReturn.setWinner(player);
+                player.setScore(1); // set player score to 1
                 return dataToReturn;
             }
         }
@@ -284,6 +285,7 @@ public class GameHandler implements Runnable {
             if(board[row][0] == player.getID() && board[row][1] == player.getID() && board[row][2] == player.getID()) {
                 System.out.println("HORIZ WIN");
                 dataToReturn.setWinner(player);
+                player.setScore(1); // set player score to 1
                 return dataToReturn;
             }
         }
@@ -293,12 +295,15 @@ public class GameHandler implements Runnable {
         if(board[0][0] == player.getID() && board[1][1] == player.getID() && board[2][2] == player.getID()) {
             System.out.println("DIAG WIN");
             dataToReturn.setWinner(player);
+            player.setScore(1); // set player score to 1
             return dataToReturn;
         }
 
         if(board[0][2] == player.getID() && board[1][1] == player.getID() && board[2][0] == player.getID()) {
             System.out.println("DIAG WIN");
             dataToReturn.setWinner(player);
+            player.setScore(1); // set player score to 1
+
             return dataToReturn;
         }
 
